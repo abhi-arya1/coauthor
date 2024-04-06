@@ -14,3 +14,10 @@ async def say_hi():
         "message": "Hello from CoAuthor API!",
         "url": f"Serving on AWS URL: {getenv('AWS_URL')}"
         }
+
+
+@app.post('/chat') 
+async def chat():
+    return {
+        "message": "chat"
+    }

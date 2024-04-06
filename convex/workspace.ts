@@ -84,30 +84,50 @@ export const getWorkspacesByCreator = query({
             throw new Error("No Auth");
         }
 
-        const user = await ctx.db 
-        .query("user")
-        .filter((q) => q.eq(q.field("userId"), args.userId))
-        .first(); 
+        const creatorUser = await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("userId"), args.userId))
+            .first();
+
+        if (!creatorUser) {
+            throw new Error("Creator user not found");
+        }
 
         const wksps = await ctx.db
-        .query("workspace")
-        .filter((q) => q.eq(q.field("creator"), user?._id))
-        .collect();
+            .query("workspace")
+            .filter((q) => q.eq(q.field("creator"), creatorUser._id))
+            .collect();
 
-        
-        const workspaces = wksps.map(wksp => ({
-            creator: wksp.creator,
-            name: wksp.name,
-            sharedUsers: wksp.sharedUsers,
-            chatHistory: wksp.chatHistory,
-            webpages: wksp.webpages,
-            noteblock: wksp.noteblock,
-            bookmarks: wksp.bookmarks,
+        const workspaces = await Promise.all(wksps.map(async (wksp) => {
+            const sharedUserNames = await Promise.all(
+                wksp.sharedUsers.map(async (userId) => {
+                    const user = await ctx.db
+                        .query("user")
+                        .filter((q) => q.eq(q.field("userId"), userId))
+                        .first();
+                    return user ? user.name : "Unknown User";
+                })
+            );
+
+            const allNames = [creatorUser.name, ...sharedUserNames].join(", ");
+
+            return {
+                creator: wksp.creator,
+                name: wksp.name,
+                allNames, 
+                sharedUsers: wksp.sharedUsers,
+                chatHistory: wksp.chatHistory,
+                webpages: wksp.webpages,
+                noteblock: wksp.noteblock,
+                bookmarks: wksp.bookmarks,
+                _id: wksp._id
+            };
         }));
 
         return workspaces;
     }
-})
+});
+
 
 
 export const getUsernamesByWorkspace = query({
@@ -146,7 +166,6 @@ export const getUsernamesByWorkspace = query({
             name: _userData?.name,
         })).filter(user => user.userId != null); // Filter out any undefined results due to missing users.
 
-        console.log(userData);
         return userData;
     }
 });

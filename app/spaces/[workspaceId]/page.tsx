@@ -2,7 +2,7 @@
 "use client";
 
 import { redirect, useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -39,6 +39,7 @@ import { ModeToggle } from "@/components/mode_toggle";
 import { InputWithButton } from "./_components/chatbox";
 
 const WorkspacePage = () => {
+  const [ownerName, setOwnerName] = useState('User')
   const { workspaceId } = useParams();
   const { user } = useUser(); 
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
@@ -48,8 +49,15 @@ const WorkspacePage = () => {
     return redirect('/');
   }
 
+  useEffect(() => {
+    console.log(workspaceMeta);
+    if (workspaceMeta && workspaceMeta?.creator?.name) {
+      setOwnerName(workspaceMeta.creator.name)
+    }
+  }, [workspaceMeta, workspaceMeta?.creator?.name])
+
+
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
-  console.log(sharedUserData); 
 
   const router = useRouter(); 
 
@@ -64,7 +72,7 @@ const WorkspacePage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/spaces">{workspaceMeta?.creator?.name}&apos;s Spaces</BreadcrumbLink>
+            <BreadcrumbLink href="/spaces">{ownerName}&apos;s Spaces</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

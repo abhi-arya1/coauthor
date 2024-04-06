@@ -48,67 +48,6 @@ import {
 
 import { InputWithButton } from "./_components/space_input";
 import { useRouter } from "next/navigation";
-import { BackgroundBeams } from "@/components/ui/background-beams";
-
-export interface Artwork {
-  artist: string
-  art: string
-}
- 
-export const works: Artwork[] = [
-  {
-    artist: "Ornella Binni",
-    art: "",
-  },
-  {
-    artist: "Tom Byrom",
-    art: "https://images.unsplash.com/photo-1548516173-3cabfa4607e9?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    artist: "Vladimir Malyavko",
-    art: "https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80",
-  },
-]
 
 export default function SpaceBuilder() {
   const createUser = useMutation(api.user.createUser);
@@ -116,9 +55,6 @@ export default function SpaceBuilder() {
   const { user } = useUser(); 
   const router = useRouter(); 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
-  // for (const wksp in workspaces) {
-  //   const userNames = useQuery(api.workspace.getUsernamesByWorkspace, {workspaceId: wksp._id})
-  // }
   createUser({ 
     userId: user?.id || 'user_0',
     name: user?.fullName || 'User',
@@ -140,9 +76,9 @@ export default function SpaceBuilder() {
     
   return (
     <div className="flex flex-row items-center justify-center gap-x-60">
-      {/* <div className="absolute inset-0 bg-white dark:bg-[#1F1F1F] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" /> */}
-      {/* <Boxes /> */}
-      <div className="absolute top-5 z-[999] left-5">
+      <div className="absolute inset-0 w-full h-full bg-white dark:bg-black z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
+      <div className="absolute top-5 z-[21] left-5">
       <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
@@ -155,14 +91,14 @@ export default function SpaceBuilder() {
       </BreadcrumbList>
       </Breadcrumb>
       </div>
-      <div className="z-[999] absolute top-5 right-5">
+      <div className="z-[21] absolute top-5 right-5">
         <ModeToggle />
       </div>
-      <div className="flex flex-row items-center justify-center z-[999]">
+      <div className="flex flex-row items-center justify-center z-[21]">
         <span className="font-bold text-3xl">Welcome, {user?.fullName || "User"} </span>
       </div>
       <div className="flex flex-col">
-        <div className="z-[999] flex flex-row items-center justify-center">
+        <div className="z-[21] flex flex-row items-center justify-center">
         <Drawer>
         <DrawerTrigger>
           <Button className="text-xl font-semibold pr-3" variant={"link"}>
@@ -198,10 +134,10 @@ export default function SpaceBuilder() {
                 <Card key={0} className="w-[350px]">
                   <CardHeader>
                     <CardTitle>{space.name}</CardTitle>
-                    <CardDescription>By: {space.creator}</CardDescription>
+                    <CardDescription>{space.allNames}</CardDescription>
                   </CardHeader>
                   <CardFooter className="flex justify-between">
-                    <Button onClick={() => {router.push(`/spaces/${space.name}`)}}>Open</Button>
+                    <Button onClick={() => {router.push(`/spaces/${space._id}`)}}>Open</Button>
                   </CardFooter>
                 </Card>
             ))}
@@ -230,7 +166,7 @@ export default function SpaceBuilder() {
               <Plus className="h-5 w-5" />
             </div>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className='z-[99999]'>
           <AlertDialogHeader>
             <AlertDialogTitle>Create a New Workspace</AlertDialogTitle>
             <AlertDialogDescription>

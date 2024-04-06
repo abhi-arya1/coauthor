@@ -31,6 +31,5 @@ export default function SpacesLayout({
             {children}
         </main>
       </div>
-      
     );
   }

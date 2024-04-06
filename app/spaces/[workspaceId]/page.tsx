@@ -2,8 +2,17 @@
 
 import { useParams } from "next/navigation";
 import React from "react";
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import GridLayout from "react-grid-layout";
+import { useUser } from "@clerk/clerk-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 class MyFirstGrid extends React.Component {
   render() {
@@ -15,16 +24,16 @@ class MyFirstGrid extends React.Component {
     ];
     return (
       <GridLayout
-        className="layout"
+        className="layout absolute"
         layout={layout}
         cols={4}
         rowHeight={30}
-        width={1650}
+        width={1200}
         isResizable = {true}
       >
-        <div key="a" style={{ background: '#092327', borderRadius: 5, textAlign: "center"}}>a</div>
-        <div key="b" style={{ background: '#092327', borderRadius: 5, textAlign: "center" }}>b</div>
-        <div key="c" style={{ background: '#092327', borderRadius: 5, textAlign: "center" }}>c</div>
+        <div key="a" style={{ background: '#FFFFFF', borderRadius: 5, textAlign: "center"}}>a</div>
+        <div key="b" style={{ background: '#FFFFFF', borderRadius: 5, textAlign: "center" }}>b</div>
+        <div key="c" style={{ background: '#FFFFFF', borderRadius: 5, textAlign: "center" }}>c</div>
       </GridLayout>
     );
   }
@@ -32,11 +41,31 @@ class MyFirstGrid extends React.Component {
 
 const WorkspacePage = () => {
   const { workspaceId } = useParams();
+  const { user } = useUser(); 
+
+  const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
+
   return ( 
-      <div>
-          Hello World, we&apos;re at {workspaceId}
-          <MyFirstGrid />
+    <>
+      <div className="absolute top-5 left-5">
+      <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/spaces">{user?.firstName}&apos;s Spaces</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href={`/spaces/${workspaceId}`}>{workspaceMeta?.name}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+      </Breadcrumb>
       </div>
+      <MyFirstGrid />
+    </>
    );
 }
  

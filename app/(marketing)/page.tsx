@@ -8,7 +8,7 @@ export default function LandingPage() {
         titleComponent={
           <>
             <h1 className="text-4xl font-semibold text-black dark:text-white">
-              Your next <br />
+              Your Next <br />
               <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
                 Research Assistant.
               </span>

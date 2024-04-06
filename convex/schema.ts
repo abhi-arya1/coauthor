@@ -5,7 +5,7 @@ export default defineSchema({
     workspace: defineTable({
         creator: v.id("user"),
         name: v.string(), 
-        sharedUsers: v.array(v.id("user")),
+        sharedUsers: v.array(v.string()),
         chatHistory: v.array(v.array(v.string())),
         webpages: v.optional(v.string()),
         noteblock: v.optional(v.string()), 

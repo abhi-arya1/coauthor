@@ -38,12 +38,14 @@ export default function SpaceBuilder() {
   });
 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)); 
 
   const handleCreateWorkspace = (name: string) => {
     createWorkspace({
       creator: user?.id || 'user_0',
       name: name
-    }).then((workspace) => {
+    }).then(async (workspace) => {
+      await sleep(500);
       router.push(`/spaces/${workspace}`);
     })
   }

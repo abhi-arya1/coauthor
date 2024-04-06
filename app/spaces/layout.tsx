@@ -1,10 +1,11 @@
 "use client";
 
 import { Spinner } from "@/components/spinner";
-import { useConvexAuth } from "convex/react";
-import { redirect } from "next/navigation";
-import { Boxes } from "@/components/ui/background-boxes";
-import { BackgroundBeams } from "@/components/ui/background-beams";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/clerk-react";
+import { useConvexAuth, useQuery } from "convex/react";
+import { redirect, useParams } from "next/navigation";
+import { Suspense } from "react";
 
 export default function SpacesLayout({
   children,

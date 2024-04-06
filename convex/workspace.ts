@@ -59,8 +59,13 @@ export const getWorkspaceById = query({
             return null;
         }
 
+        const user = await ctx.db 
+        .query("user")
+        .filter((q) => q.eq(q.field("_id"), workspace.creator))
+        .first(); 
+
         return {
-            creator: workspace.creator,
+            creator: user,
             name: workspace.name,
             sharedUsers: workspace.sharedUsers,
             chatHistory: workspace.chatHistory,

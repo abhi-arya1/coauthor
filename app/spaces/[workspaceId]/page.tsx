@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import React from "react";
 import {
   Breadcrumb,
@@ -42,8 +42,11 @@ class MyFirstGrid extends React.Component {
 const WorkspacePage = () => {
   const { workspaceId } = useParams();
   const { user } = useUser(); 
-
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
+  if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId) {
+    console.log(user?.id, workspaceMeta?.creator?.userId);
+    return redirect('/');
+  }
 
   return ( 
     <>
@@ -55,7 +58,7 @@ const WorkspacePage = () => {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="/spaces">{user?.firstName}&apos;s Spaces</BreadcrumbLink>
+          <BreadcrumbLink href="/spaces">{workspaceMeta?.creator?.name}&apos;s Spaces</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

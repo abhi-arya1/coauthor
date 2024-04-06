@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from mangum import Mangum 
+from dotenv import load_dotenv
+from os import getenv
 
-AWS_URL = "https://kcg52nngxu3ihw6e5mmusqdyse0bchdg.lambda-url.us-east-2.on.aws/"
+load_dotenv() 
 
 app = FastAPI()
 handler = Mangum(app)
@@ -10,5 +12,5 @@ handler = Mangum(app)
 async def say_hi():
     return {
         "message": "Hello from CoAuthor API!",
-        "url": f"Serving on AWS URL: {AWS_URL}"
+        "url": f"Serving on AWS URL: {getenv('AWS_URL')}"
         }

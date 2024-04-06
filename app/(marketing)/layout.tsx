@@ -1,4 +1,5 @@
 import { Navbar } from "./_components/navbar";
+import { AuroraBackground } from "@/components/ui/aurora_background";
 
 const MarketingLayout = ({
     children
@@ -7,10 +8,13 @@ const MarketingLayout = ({
 }) => {
     return (
         <div className="h-full dark:bg-[#1F1F1F]">
-            <Navbar />
-            <main className="h-full pt-40 pb-40 dark:bg-[#1F1F1F]">
-                {children}
-            </main>
+            <AuroraBackground>
+                <Navbar />
+                <main className="h-full pt-40 pb-40 dark:bg-[#1F1F1F]">
+                    {children}
+                </main>
+            </AuroraBackground>
+            
         </div>
      );
 }

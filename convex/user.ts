@@ -20,7 +20,10 @@ export const createUser = mutation({
         .filter(q => q.eq(q.field("userId"), args.userId))
         .first();  
 
-        if (existingUser) { return null; }
+        if (existingUser) { 
+            console.log("User already exists");
+            return null; 
+        }
 
         const document = await context.db.insert("user",
         {

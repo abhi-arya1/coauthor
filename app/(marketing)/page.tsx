@@ -2,9 +2,9 @@
 
 export default function LandingPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        Hello World 
+    <main className="flex items-center justify-center">
+      <div className="z-10 text-sm lg:flex">
+        <span className="text-6xl font-mono">coauthor.ai</span>
       </div>
     </main>
   );

@@ -20,7 +20,7 @@ export const Navbar = () => {
             "z-50 fixed top-0 flex items-center w-full p-6",
             scrolled && "border-b shadow-sm"
         )}>
-            <Link href="/">
+            {/* <Link href="/">
                 <Image 
                     src="/petrhead.png" // Your image path
                     alt="Logo"
@@ -29,7 +29,7 @@ export const Navbar = () => {
                     style={{ borderRadius: '10px', cursor: 'pointer' }}
                     className="drop-shadow-2xl"
                 />
-            </Link>
+            </Link> */}
             <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-4">
                 {isLoading && (
                     <div>
@@ -40,7 +40,7 @@ export const Navbar = () => {
                             mode="modal"
                             afterSignInUrl="/posts"
                         >
-                            <Button variant="ghost" size="sm">
+                            <Button variant="link" size="sm">
                                 Log In
                             </Button>
                 </SignInButton>

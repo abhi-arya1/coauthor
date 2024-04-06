@@ -63,3 +63,28 @@ export const getByUserId = query({
         return userData;
     }
 });
+
+
+const getByEmail = query({
+    args: { email: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const user = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("email"), args.email))
+        .first();
+
+        
+        const userData = {
+            userId: user?.userId,
+            pfpUrl: user?.pfpUrl,
+            email: user?.email,
+            name: user?.name
+        }
+        return userData;
+    }
+})

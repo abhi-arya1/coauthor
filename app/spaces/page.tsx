@@ -78,7 +78,7 @@ export default function SpaceBuilder() {
     
   return (
     <div className="flex flex-row items-center justify-center gap-x-60">
-      <div className="absolute inset-0 w-full h-full bg-white dark:bg-black z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="absolute inset-0 bg-white dark:bg-black z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <Boxes />
       <div className="absolute top-5 z-[21] left-5">
       <Breadcrumb>

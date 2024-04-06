@@ -15,8 +15,10 @@ export default function SpaceBuilder() {
   });
     
   return (
-    <div className="flex flex-col items-center justify-center">
-        <span className="text-6xl font-mono">coauthor.ai, {user?.fullName}</span>
+    <div className="flex flex-col items-center justify-center ">
+      <div>
+        Welcome, {user?.fullName || "User"}!
+      </div>
     </div>
   );
 }

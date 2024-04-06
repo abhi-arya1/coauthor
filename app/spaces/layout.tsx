@@ -25,7 +25,7 @@ export default function SpacesLayout({
 
     return (
       <html lang="en">
-        <body>
+        <body className="h-full dark:bg-[#1F1F1F]">
           {children}
         </body>
       </html>

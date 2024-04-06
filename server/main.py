@@ -17,8 +17,8 @@ async def say_hi():
         "url": f"Serving on AWS URL: {getenv('AWS_URL')}"
         }
 
-@app.post('/chat') 
-async def chat(history: dict, message: str):
+@app.post('/chat/{workspace_id}') 
+async def chat(workspace_id):
     return {
         "history": add_to_history(history, message, send_message(message))
     }

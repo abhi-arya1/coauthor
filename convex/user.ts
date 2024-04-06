@@ -65,7 +65,7 @@ export const getByUserId = query({
 });
 
 
-const getByEmail = query({
+export const getByEmail = query({
     args: { email: v.string() },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();

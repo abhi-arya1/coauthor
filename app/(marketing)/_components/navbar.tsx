@@ -17,17 +17,24 @@ export const Navbar = () => {
 
     return (
         <div className={cn(
-            "z-50 fixed top-0 flex items-center w-full p-6",
-            scrolled && "border-b shadow-sm"
+            "z-50 fixed top-0 flex items-center w-full p-6"
         )}>
             <Link href="/">
                 <Image 
-                    src="/petrhead.png" // Your image path
+                    src="/coauth_peri.png" // Your image path
                     alt="Logo"
-                    width={70} // Adjust as needed
-                    height={70} // Adjust as needed
+                    width={40} // Adjust as needed
+                    height={40} // Adjust as needed
                     style={{ borderRadius: '10px', cursor: 'pointer' }}
-                    className="drop-shadow-2xl"
+                    className="drop-shadow-2xl hidden dark:block"
+                />
+                <Image 
+                    src="/coauth_metal.png" // Your image path
+                    alt="Logo"
+                    width={40} // Adjust as needed
+                    height={40} // Adjust as needed
+                    style={{ borderRadius: '10px', cursor: 'pointer' }}
+                    className="drop-shadow-2xl dark:hidden"
                 />
             </Link>
             <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-4">
@@ -40,7 +47,7 @@ export const Navbar = () => {
                             mode="modal"
                             afterSignInUrl="/posts"
                         >
-                            <Button variant="ghost" size="sm">
+                            <Button variant="link" size="sm">
                                 Log In
                             </Button>
                 </SignInButton>

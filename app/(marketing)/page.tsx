@@ -1,4 +1,5 @@
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
 import Image from "next/image";
 
 export default function LandingPage() {
@@ -25,6 +26,8 @@ export default function LandingPage() {
           draggable={false}
         />
       </ContainerScroll>
+        {/* <StickyScroll content={content} /> */}
     </div>
+    
   );
 }

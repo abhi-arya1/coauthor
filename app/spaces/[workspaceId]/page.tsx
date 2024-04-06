@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { redirect, useParams } from "next/navigation";
@@ -54,8 +53,7 @@ const WorkspacePage = () => {
   const router = useRouter(); 
 
   return ( 
-    <div className="flex flex-col h-screen w-screen">
-
+    <>
       <div className="absolute top-5 left-5">
         <Breadcrumb>
         <BreadcrumbList>
@@ -73,15 +71,10 @@ const WorkspacePage = () => {
         </BreadcrumbList>
         </Breadcrumb>
       </div>
-
-      <div className="absolute top-5 right-5 ">
-        <ModeToggle />
-      </div>
-
-      <div className="absolute right-16 top-5">
-        <Menubar className="bg-white dark:bg-[#1a1a1a]">
+      <div className="absolute right-5 top-5">
+        <Menubar>
         <MenubarMenu>
-          <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">File</MenubarTrigger>
+          <MenubarTrigger>File</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
               Save 
@@ -100,7 +93,7 @@ const WorkspacePage = () => {
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">Edit</MenubarTrigger>
+          <MenubarTrigger>Edit</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
               Undo <MenubarShortcut>⌘Z</MenubarShortcut>
@@ -126,7 +119,7 @@ const WorkspacePage = () => {
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">View</MenubarTrigger>
+          <MenubarTrigger>View</MenubarTrigger>
           <MenubarContent>
             <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
             <MenubarCheckboxItem checked>
@@ -139,13 +132,10 @@ const WorkspacePage = () => {
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800"><Users className="h-5 w-5" /></MenubarTrigger>
+          <MenubarTrigger><Users className="h-5 w-5" /></MenubarTrigger>
           <MenubarContent>
             <MenubarItem disabled>Current Members</MenubarItem>
             <MenubarRadioGroup>
-              {sharedUserData?.length === 0 && (
-                <MenubarRadioItem value="none" className="text-muted-foreground italic">No Shared Users...</MenubarRadioItem>
-              )}
               {sharedUserData?.map(user => (
                 <MenubarRadioItem key={user.userId} value={user.userId || 'user_0'}>{user.name}</MenubarRadioItem>
               ))}
@@ -156,36 +146,7 @@ const WorkspacePage = () => {
         </MenubarMenu>
       </Menubar>
       </div>
-
-      <div className="flex flex-grow pt-12">
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="h-full w-full"
-        >
-          <ResizablePanel defaultSize={35}>
-            <div className="flex h-full items-end justify-center p-6">
-              <InputWithButton placeholder="Chat with Gemini" onInputSubmit={(input) => {console.log(input)}}/>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel>
-            <ResizablePanelGroup direction="vertical" className="h-full w-full">
-              <ResizablePanel>
-                <div className="flex h-full w-full items-center justify-center p-6">
-                  <span className="font-semibold">Two</span>
-                </div>
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-              <ResizablePanel>
-                <div className="flex h-full w-full items-center justify-center p-6">
-                  <span className="font-semibold">Three</span>
-                </div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>
-    </div>
+    </>
    );
 }
  

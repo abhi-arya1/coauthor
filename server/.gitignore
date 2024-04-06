@@ -3,5 +3,5 @@
 .DS_Store
 /dependencies
 /aws_lambda_artifact/
-aws_lambda_artifact.zip
+*.zip
 .env

@@ -10,7 +10,7 @@ interface InputWithButtonProps {
   placeholder: string; 
 }
 
-export function InputWithButton({ onInputSubmit, placeholder, buttonName }: InputWithButtonProps) {
+export function InputWithButton({ onInputSubmit, placeholder }: InputWithButtonProps) {
   const [inputValue, setInputValue] = useState<string>('');
   const [pholder, setPlaceholder] = useState(placeholder);
 

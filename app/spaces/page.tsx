@@ -188,7 +188,7 @@ export default function SpaceBuilder() {
                 </figure>
               ))} */}
               { workspaces && workspaces?.map(space => (
-                <Card className="w-[350px]">
+                <Card key={0} className="w-[350px]">
                   <CardHeader>
                     <CardTitle>{space.name}</CardTitle>
                     <CardDescription>By: </CardDescription>

@@ -25,7 +25,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { CircleHelp, Plus, Terminal } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import {
   Drawer,
   DrawerClose,
@@ -55,6 +56,7 @@ export default function SpaceBuilder() {
   const { user } = useUser(); 
   const router = useRouter(); 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
+  console.log(workspaces)
   createUser({ 
     userId: user?.id || 'user_0',
     name: user?.fullName || 'User',
@@ -100,39 +102,50 @@ export default function SpaceBuilder() {
       <div className="flex flex-col">
         <div className="z-[21] flex flex-row items-center justify-center">
         <Drawer>
-        <DrawerTrigger>
-          <Button className="text-xl font-semibold pr-3" variant={"link"}>
-          Your Workspaces
-        </Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            Workspaces
-          </DrawerHeader>
-          <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-            <div className="flex w-max space-x-4 p-4">
-              { workspaces && workspaces?.map(space => (
-                <Card key={0} className="w-[350px]">
-                  <CardHeader>
-                    <CardTitle>{space.name}</CardTitle>
-                    <CardDescription>{space.allNames}</CardDescription>
-                  </CardHeader>
-                  <CardFooter className="flex justify-between">
-                    <Button onClick={() => {router.push(`/spaces/${space._id}`)}}>Open</Button>
-                  </CardFooter>
-                </Card>
-            ))}
-              
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-          <DrawerFooter>
-            <DrawerClose>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          <DrawerTrigger>
+            <Button className="text-xl font-semibold pr-3" variant={"link"}>
+              Your Workspaces
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>Workspaces</DrawerHeader>
+            {workspaces && workspaces.length !== 0 ? (
+              <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                <div className="flex w-max space-x-4 p-4">
+                  {workspaces?.map((space) => (
+                    <Card key={0} className="w-[350px]">
+                      <CardHeader>
+                        <CardTitle>{space.name}</CardTitle>
+                        <CardDescription>{space.allNames}</CardDescription>
+                      </CardHeader>
+                      <CardFooter className="flex justify-between">
+                        <Button onClick={() => router.push(`/spaces/${space._id}`)}>
+                          Open
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            ) : (
+              <div className="flex justify-center items-center h-full w-full">
+                <Alert>
+                  <CircleHelp className="h-5 w-5" />
+                  <AlertTitle>You have no workspaces!</AlertTitle>
+                  <AlertDescription>
+                    Click the plus button on screen to add a new workspace.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+            <DrawerFooter>
+              <DrawerClose>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
 
         
         <AlertDialog>

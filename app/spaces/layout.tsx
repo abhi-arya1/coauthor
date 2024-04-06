@@ -24,11 +24,11 @@ export default function SpacesLayout({
   }
 
     return (
-      <html lang="en">
-        <body className="h-full dark:bg-[#1F1F1F]">
-          {children}
-        </body>
-      </html>
+      <div className="h-full flex dark:bg-[#1F1F1F]">
+        <main className="h-full overflow-y-auto dark:bg-[#1F1F1F]">
+        {children}
+        </main>
+      </div>
       
     );
   }

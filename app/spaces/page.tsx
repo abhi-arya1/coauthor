@@ -3,6 +3,7 @@
 import { useMutation } from "convex/react";
 import { useUser } from "@clerk/clerk-react";
 import { api } from "@/convex/_generated/api";
+import { ModeToggle } from "@/components/mode_toggle";
 
 export default function SpaceBuilder() {
   const createUser = useMutation(api.user.createUser);
@@ -15,7 +16,7 @@ export default function SpaceBuilder() {
   });
     
   return (
-    <div className="flex flex-col items-center justify-center ">
+    <div className="flex flex-col self-center justify-self-center">
       <div>
         Welcome, {user?.fullName || "User"}!
       </div>

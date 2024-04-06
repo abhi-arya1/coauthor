@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useConvexAuth } from "convex/react";
 import Image from "next/image";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { Spinner } from "@/components/spinner";
 
 
@@ -35,6 +36,22 @@ export const Navbar = () => {
                         <Spinner />
                     </div>
                 )}
+                <SignInButton 
+                            mode="modal"
+                            afterSignInUrl="/posts"
+                        >
+                            <Button variant="ghost" size="sm">
+                                Log In
+                            </Button>
+                </SignInButton>
+                <SignUpButton 
+                            mode="modal"
+                            afterSignUpUrl="/signup"
+                        >
+                            <Button size="sm">
+                                Join Coauthor
+                            </Button>
+                </SignUpButton>
                 {/* {!isAuthenticated && !isLoading && (
                     <>
                         <SignInButton 

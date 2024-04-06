@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Navbar } from "./(marketing)/_components/navbar"; 
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/providers/convex_provider";
+import { ThemeProvider } from '@/components/providers/theme_provider'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,15 @@ export default function MarketingLayout({
     <html lang="en">
       <body className={`h-screen ${inter.className}`}>
       <ConvexClientProvider>
-                  {children}
+        <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+                storageKey="jotster-theme"
+              >
+              {children}
+        </ThemeProvider>
       </ConvexClientProvider>
       </body>
     </html>

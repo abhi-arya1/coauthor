@@ -37,11 +37,20 @@ import { UserCog, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/mode_toggle";
 import { InputWithButton } from "./_components/chatbox";
+import "@blocknote/core/fonts/inter.css";
+import { BlockNoteView, useCreateBlockNote } from "@blocknote/react";
+import "@blocknote/react/style.css";
+import { useTheme } from "next-themes";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const WorkspacePage = () => {
   const [ownerName, setOwnerName] = useState('User')
   const { workspaceId } = useParams();
   const { user } = useUser(); 
+  const { resolvedTheme } = useTheme();
+  const editor = useCreateBlockNote();
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
   if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId && !workspaceMeta?.sharedUsers.includes(user?.id || 'user_0'
   )) {
@@ -167,7 +176,7 @@ const WorkspacePage = () => {
       <div className="flex flex-grow pt-12">
         <ResizablePanelGroup
           direction="horizontal"
-          className="h-full w-full"
+          className="h-full w-full rounded-md"
         >
           <ResizablePanel defaultSize={35}>
             <div className="flex h-full items-end justify-center p-6">
@@ -179,14 +188,24 @@ const WorkspacePage = () => {
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel>
                 <div className="flex h-full w-full items-center justify-center p-6">
-                  <span className="font-semibold">Two</span>
+                  <ScrollArea>
+                    <Card key={0} className="w-[350px]">
+                        <CardHeader>
+                          <CardTitle>SITE_NAME</CardTitle>
+                          <CardDescription>INFO</CardDescription>
+                        </CardHeader>
+                        <CardFooter className="flex justify-between">
+                          <Button>
+                            OPEN LINK
+                          </Button>
+                        </CardFooter>
+                    </Card>
+                  </ScrollArea>
                 </div>
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel>
-                <div className="flex h-full w-full items-center justify-center p-6">
-                  <span className="font-semibold">Three</span>
-                </div>
+                <BlockNoteView className="py-5" editor={editor} theme={resolvedTheme === "dark" ? "dark" : "light"}/>
               </ResizablePanel>
             </ResizablePanelGroup>
           </ResizablePanel>

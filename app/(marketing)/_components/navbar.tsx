@@ -13,7 +13,7 @@ import { Spinner } from "@/components/spinner";
 
 export const Navbar = () => {
     const { isAuthenticated, isLoading } = useConvexAuth()
-    const scrolled = useScrollTop()
+    const scrolled = useScrollTop();
 
     return (
         <div className={cn(
@@ -43,52 +43,35 @@ export const Navbar = () => {
                         <Spinner />
                     </div>
                 )}
-                <SignInButton 
-                            mode="modal"
-                            afterSignInUrl="/posts"
-                        >
-                            <Button variant="link" size="sm">
-                                Log In
-                            </Button>
-                </SignInButton>
-                <SignUpButton 
-                            mode="modal"
-                            afterSignUpUrl="/signup"
-                        >
-                            <Button size="sm">
-                                Join Coauthor
-                            </Button>
-                </SignUpButton>
-                {/* {!isAuthenticated && !isLoading && (
+                {!isAuthenticated && !isLoading && (
                     <>
                         <SignInButton 
                             mode="modal"
-                            afterSignInUrl="/posts"
+                            afterSignInUrl="/spaces"
                         >
-                            <Button variant="ghost" size="sm">
+                            <Button variant="link" size="sm">
                                 Log In
                             </Button>
                         </SignInButton>
                         <SignUpButton 
                             mode="modal"
-                            afterSignUpUrl="/signup"
                         >
                             <Button size="sm">
-                                Join ZotConnect
+                                Join Coauthor
                             </Button>
                         </SignUpButton>
                     </>
-                )} */}
-                {/* {isAuthenticated && !isLoading && (
+                )}
+                {isAuthenticated && !isLoading && (
                     <>
                     <Button size="sm" asChild>
-                        <Link href="/posts">
-                            Enter ZotConnect
+                        <Link href="/spaces">
+                            Enter Coauthor
                         </Link>
                     </Button>
                     <UserButton afterSignOutUrl="/" />
                     </>
-                )} */}
+                )}
                 <ModeToggle />
             </div>
         </div>

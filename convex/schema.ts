@@ -3,25 +3,31 @@ import { v } from "convex/values";
 
 export default defineSchema({
     workspace: defineTable({
-        creatorID: v.number(),
-        userIDs: v.array(v.number()),
-        chatHistory: v.array(v.string()),
+        creator: v.id("user"),
+        sharedUsers: v.array(v.id("user")),
+        chatHistory: v.array(v.array(v.string())),
         webpages: v.optional(v.string()),
         noteblock: v.optional(v.string()), 
+        bookmarks: v.optional(v.array(v.id("webpage")))
     }),
 
     webpage: defineTable({
         url: v.string(),
         title: v.string(),
-        descriptionHoverMetaData: v.string(), 
-    }),
+        description: v.string(),
+        imageUrl: v.string(),
+        firstContent: v.string(), 
+    })
+    .index("byUrl", ["url"]),
 
     user: defineTable({
-        userID: v.number(), 
-        pfpURL: v.string(), 
+        userId: v.number(), 
+        pfpUrl: v.string(), 
         email: v.string(), 
         name: v.string(), 
-        targetEmails: v.array(v.string()),
     })
-    .index("byTargetEmails", ["targetEmails"])
+    .index("byUserId", ["userId"])
+    .index("byEmail", ["email"])
+    .index("byName", ["name"])
+
 });

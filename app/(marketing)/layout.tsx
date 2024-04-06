@@ -1,13 +1,5 @@
-import { MacbookScroll } from "@/components/ui/macbook-scroll";
 import { Navbar } from "./_components/navbar";
 import { AuroraBackground } from "@/components/ui/aurora_background";
-import { TracingBeam } from "@/components/ui/tracing-beam";
-
-import Link from "next/link";
-import { Inter } from "next/font/google";
-import { twMerge } from "tailwind-merge";
-import { Badge } from "lucide-react";
-import Image from "next/image";
 
 const MarketingLayout = ({
     children

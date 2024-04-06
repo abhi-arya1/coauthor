@@ -17,18 +17,18 @@ export default function SpacesLayout({
             <Spinner size="lg" />
         </div>
     )
-}
+  }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isLoading) {
     return redirect("/");
   }
-  
-  return (
-    <html lang="en">
-      <body>
-              {children}
-      </body>
-    </html>
-    
-  );
-}
+
+    return (
+      <html lang="en">
+        <body>
+          {children}
+        </body>
+      </html>
+      
+    );
+  }

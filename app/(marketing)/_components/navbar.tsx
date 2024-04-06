@@ -47,7 +47,7 @@ export const Navbar = () => {
                     <>
                         <SignInButton 
                             mode="modal"
-                            afterSignInUrl="/spaces"
+                            afterSignInUrl="/"
                         >
                             <Button variant="link" size="sm">
                                 Log In
@@ -55,7 +55,7 @@ export const Navbar = () => {
                         </SignInButton>
                         <SignUpButton 
                             mode="modal"
-                            afterSignUpUrl="/spaces"
+                            afterSignUpUrl="/"
                         >
                             <Button size="sm">
                                 Join Coauthor
@@ -65,7 +65,7 @@ export const Navbar = () => {
                 )}
                 {isAuthenticated && !isLoading && (
                     <>
-                    <Button size="sm" asChild>
+                    <Button size="sm" asChild >
                         <Link href="/spaces">
                             Enter Coauthor
                         </Link>

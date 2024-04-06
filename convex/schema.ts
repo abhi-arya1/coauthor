@@ -21,7 +21,7 @@ export default defineSchema({
     .index("byUrl", ["url"]),
 
     user: defineTable({
-        userId: v.number(), 
+        userId: v.string(),
         pfpUrl: v.string(), 
         email: v.string(), 
         name: v.string(), 

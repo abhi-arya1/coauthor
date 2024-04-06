@@ -114,6 +114,9 @@ export default function SpaceBuilder() {
   const { user } = useUser(); 
   const router = useRouter(); 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
+  for (const wksp in workspaces) {
+    const userNames = useQuery(api.workspace.getUsernamesByWorkspace, {workspaceId: wksp._id})
+  }
   createUser({ 
     userId: user?.id || 'user_0',
     name: user?.fullName || 'User',
@@ -191,7 +194,7 @@ export default function SpaceBuilder() {
                 <Card key={0} className="w-[350px]">
                   <CardHeader>
                     <CardTitle>{space.name}</CardTitle>
-                    <CardDescription>By: </CardDescription>
+                    <CardDescription>By: {space.creator}</CardDescription>
                   </CardHeader>
                   <CardContent>
                       <div className="grid w-full items-center gap-4">
@@ -217,7 +220,6 @@ export default function SpaceBuilder() {
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
           <DrawerFooter>
-            <Button>Submit</Button>
             <DrawerClose>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>

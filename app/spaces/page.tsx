@@ -114,9 +114,9 @@ export default function SpaceBuilder() {
   const { user } = useUser(); 
   const router = useRouter(); 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
-  for (const wksp in workspaces) {
-    const userNames = useQuery(api.workspace.getUsernamesByWorkspace, {workspaceId: wksp._id})
-  }
+  // for (const wksp in workspaces) {
+  //   const userNames = useQuery(api.workspace.getUsernamesByWorkspace, {workspaceId: wksp._id})
+  // }
   createUser({ 
     userId: user?.id || 'user_0',
     name: user?.fullName || 'User',
@@ -196,20 +196,6 @@ export default function SpaceBuilder() {
                     <CardTitle>{space.name}</CardTitle>
                     <CardDescription>By: {space.creator}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                      <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5">
-                          <Label htmlFor="framework">Framework</Label>
-                          <Image
-                                  src="/coauth_metal.png"
-                                  alt={`Photo`}
-                                  className="aspect-[3/4] h-fit w-fit object-cover"
-                                  width={300}
-                                  height={400}
-                                />
-                        </div>
-                      </div>
-                  </CardContent>
                   <CardFooter className="flex justify-between">
                     <Button>Open</Button>
                   </CardFooter>

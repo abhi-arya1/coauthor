@@ -17,17 +17,17 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <html lang="en">
-    //   <body className={inter.className}>{children}</body>
-    // </html>
-    <div className="h-full dark:bg-[#1F1F1F]">
-            <Navbar />
-            <ConvexClientProvider>
-              <main className="h-full pt-40 pb-40 dark:bg-[#1F1F1F]">
+    <html lang="en">
+      <body className={`h-screen ${inter.className}`}>
+      <ConvexClientProvider>
                   {children}
-              </main>
-              {/* <Footer /> */}
-            </ConvexClientProvider>
-        </div>
+              </ConvexClientProvider>
+      </body>
+    </html>
+    // <div className="h-full dark:bg-[#1F1F1F]">
+    //         <Navbar />
+    //           <main className="h-full pt-40 pb-40 dark:bg-[#1F1F1F]">
+            
+    //     </div>
   );
 }

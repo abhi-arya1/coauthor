@@ -6,7 +6,6 @@ import { ModeToggle } from "@/components/mode_toggle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useConvexAuth } from "convex/react";
-// import { SignInButton, UserButton, SignUpButton } from "@clerk/clerk-react";
 import Image from "next/image";
 import { Spinner } from "@/components/spinner";
 

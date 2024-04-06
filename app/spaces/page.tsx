@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useUser } from "@clerk/clerk-react";
 import { api } from "@/convex/_generated/api";
 import { ModeToggle } from "@/components/mode_toggle";
+import { Boxes } from "@/components/ui/background-boxes";
 import {
   Card,
   CardContent,
@@ -47,6 +48,7 @@ import {
 
 import { InputWithButton } from "./_components/space_input";
 import { useRouter } from "next/navigation";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export interface Artwork {
   artist: string
@@ -138,7 +140,9 @@ export default function SpaceBuilder() {
     
   return (
     <div className="flex flex-row items-center justify-center gap-x-60">
-      <div className="absolute top-5 left-5">
+      <div className="absolute inset-0 bg-white dark:bg-[#1F1F1F] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
+      <div className="absolute top-5 z-[999] left-5">
       <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
@@ -151,14 +155,14 @@ export default function SpaceBuilder() {
       </BreadcrumbList>
       </Breadcrumb>
       </div>
-      <div className="z-10 absolute top-5 right-5">
+      <div className="z-[999] absolute top-5 right-5">
         <ModeToggle />
       </div>
-      <div className="flex flex-row items-center justify-center">
-        <span className="z-10 font-bold text-3xl">Welcome, {user?.fullName || "User"} </span>
+      <div className="flex flex-row items-center justify-center z-[999]">
+        <span className="font-bold text-3xl">Welcome, {user?.fullName || "User"} </span>
       </div>
-      <div className="z-10 flex flex-col">
-        <div className="flex flex-row items-center justify-center">
+      <div className="flex flex-col">
+        <div className="z-[999] flex flex-row items-center justify-center">
         <Drawer>
         <DrawerTrigger>
           <Button className="text-xl font-semibold pr-3" variant={"link"}>
@@ -197,7 +201,7 @@ export default function SpaceBuilder() {
                     <CardDescription>By: {space.creator}</CardDescription>
                   </CardHeader>
                   <CardFooter className="flex justify-between">
-                    <Button>Open</Button>
+                    <Button onClick={() => {router.push(`/spaces/${space.name}`)}}>Open</Button>
                   </CardFooter>
                 </Card>
             ))}

@@ -30,12 +30,14 @@ export default function SpaceBuilder() {
   const createWorkspace = useMutation(api.workspace.createWorkspace);
   const { user } = useUser(); 
   const router = useRouter(); 
-  createUser({ 
-    userId: user?.id || 'user_0',
-    name: user?.fullName || 'User',
-    email: user?.primaryEmailAddress?.emailAddress || "Err",
-    pfpUrl: user?.profileImageUrl || "Err"
-  });
+  if (user && user?.id) {
+    createUser({ 
+      userId: user?.id || 'user_0',
+      name: user?.fullName || 'User',
+      email: user?.primaryEmailAddress?.emailAddress || "Err",
+      pfpUrl: user?.profileImageUrl || "Err"
+    });
+  }
 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)); 

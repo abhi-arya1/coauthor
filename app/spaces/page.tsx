@@ -1,12 +1,15 @@
+"use client"; 
 
+import { useUser } from "@clerk/clerk-react";
 
-export default function GenericPage() {
+export default function SpaceBuilder() {
+
+	const { user } = useUser();
+
     return (
-      <main className="flex items-center justify-center">
-        <div className="z-10 text-sm lg:flex">
-          <span className="text-6xl font-mono">coauthor.ai</span>
-        </div>
-      </main>
+      <div className="flex flex-col items-center justify-center">
+          <span className="text-6xl font-mono">coauthor.ai, {user?.fullName}</span>
+      </div>
     );
   }
   

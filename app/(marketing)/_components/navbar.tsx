@@ -13,7 +13,6 @@ import { Spinner } from "@/components/spinner";
 
 export const Navbar = () => {
     const { isAuthenticated, isLoading } = useConvexAuth()
-    const scrolled = useScrollTop();
 
     return (
         <div className={cn(
@@ -21,7 +20,7 @@ export const Navbar = () => {
         )}>
             <Link href="/">
                 <Image 
-                    src="/coauth_peri.png" // Your image path
+                    src={"/coauth_peri.png"} // Your image path
                     alt="Logo"
                     width={40} // Adjust as needed
                     height={40} // Adjust as needed
@@ -29,7 +28,7 @@ export const Navbar = () => {
                     className="drop-shadow-2xl hidden dark:block"
                 />
                 <Image 
-                    src="/coauth_metal.png" // Your image path
+                    src={"/coauth_metal.png"} // Your image path
                     alt="Logo"
                     width={40} // Adjust as needed
                     height={40} // Adjust as needed
@@ -55,6 +54,7 @@ export const Navbar = () => {
                         </SignInButton>
                         <SignUpButton 
                             mode="modal"
+                            afterSignUpUrl="/spaces"
                         >
                             <Button size="sm">
                                 Join Coauthor

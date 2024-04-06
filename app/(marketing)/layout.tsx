@@ -22,20 +22,6 @@ const MarketingLayout = ({
                     {children}
                 </main>
             </AuroraBackground>
-            <MacbookScroll
-                    title={
-                        <span>
-                          Your next research assistant.
-                        </span>
-                      }
-                    //   badge={
-                    //     <Link href="https://peerlist.io/manuarora">
-                    //       <Badge className="h-10 w-10 transform -rotate-12" />
-                    //     </Link>
-                    //   }
-                      src={`/linear.webp`}
-                      showGradient={true}
-                />
         </div>
      );
 }

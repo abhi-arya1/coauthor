@@ -1,20 +1,31 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+"use client";
 
-const inter = Inter({ subsets: ["latin"] });
+import { Spinner } from "@/components/spinner";
+import { useConvexAuth } from "convex/react";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Workspaces",
-};
-
-export default function MarketingLayout({
+export default function SpacesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
+  if (isLoading) {
+    return (
+        <div className="h-full flex flex-col gap-x-2 items-center justify-center dark:bg-[#1F1F1F]">
+            <Spinner size="lg" />
+        </div>
+    )
+}
+
+  if (!isAuthenticated) {
+    return redirect("/");
+  }
+  
   return (
     <html lang="en">
-      <body className={`h-screen ${inter.className}`}>
+      <body>
               {children}
       </body>
     </html>

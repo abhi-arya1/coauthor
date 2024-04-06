@@ -37,7 +37,6 @@ export default function SpaceBuilder() {
     pfpUrl: user?.profileImageUrl || "Err"
   });
 
-  const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)); 
 
   const handleCreateWorkspace = (name: string) => {

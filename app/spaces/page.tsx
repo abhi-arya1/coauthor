@@ -49,6 +49,7 @@ import {
 
 import { InputWithButton } from "./_components/space_input";
 import { useRouter } from "next/navigation";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export default function SpaceBuilder() {
   const createUser = useMutation(api.user.createUser);
@@ -78,8 +79,7 @@ export default function SpaceBuilder() {
     
   return (
     <div className="flex flex-row items-center justify-center gap-x-60">
-      <div className="absolute inset-0 bg-white dark:bg-black z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
-      <Boxes />
+      <BackgroundBeams />
       <div className="absolute top-5 z-[21] left-5">
       <Breadcrumb>
       <BreadcrumbList>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { redirect, useParams } from "next/navigation";
@@ -9,35 +10,26 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import GridLayout from "react-grid-layout";
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "@/components/ui/menubar"
 import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-
-class MyFirstGrid extends React.Component {
-  render() {
-    // layout is an array of objects, see the demo for more complete usage
-    const layout = [
-      { i: "a", x: 0, y: 0, w: 1, h: 2, minW: 2, maxW: 4, isResizable: true},
-      { i: "b", x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 ,},
-      { i: "c", x: 4, y: 0, w: 1, h: 2 },
-    ];
-    return (
-      <GridLayout
-        className="layout absolute"
-        layout={layout}
-        cols={4}
-        rowHeight={30}
-        width={1200}
-        isResizable = {true}
-      >
-        <div key="a" style={{ background: '#FFFFFF', borderRadius: 5, textAlign: "center"}}>a</div>
-        <div key="b" style={{ background: '#FFFFFF', borderRadius: 5, textAlign: "center" }}>b</div>
-        <div key="c" style={{ background: '#FFFFFF', borderRadius: 5, textAlign: "center" }}>c</div>
-      </GridLayout>
-    );
-  }
-}
+import { UserCog, UserPlus, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const WorkspacePage = () => {
   const { workspaceId } = useParams();
@@ -49,26 +41,105 @@ const WorkspacePage = () => {
     return redirect('/');
   }
 
+  const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
+  console.log(sharedUserData); 
+
+  const router = useRouter(); 
+
   return ( 
     <>
       <div className="absolute top-5 left-5">
-      <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/">Home</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/spaces">{workspaceMeta?.creator?.name}&apos;s Spaces</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href={`/spaces/${workspaceId}`}>{workspaceMeta?.name}</BreadcrumbLink>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-      </Breadcrumb>
+        <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/spaces">{workspaceMeta?.creator?.name}&apos;s Spaces</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/spaces/${workspaceId}`}>{workspaceMeta?.name}</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+        </Breadcrumb>
       </div>
-      <MyFirstGrid />
+      <div className="absolute right-5 top-5">
+        <Menubar>
+        <MenubarMenu>
+          <MenubarTrigger>File</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              Save 
+            </MenubarItem>
+            <MenubarItem>
+              Capture Workspace 
+            </MenubarItem>
+            {/* <MenubarSub>
+              <MenubarSubTrigger>Share</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem>Email link</MenubarItem>
+                <MenubarItem>Messages</MenubarItem>
+                <MenubarItem>Notes</MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub> */}
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Edit</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>
+              Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarSub>
+              <MenubarSubTrigger>Find</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem>Search the web</MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem>Find...</MenubarItem>
+                <MenubarItem>Find Next</MenubarItem>
+                <MenubarItem>Find Previous</MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
+            <MenubarSeparator />
+            <MenubarItem>Cut</MenubarItem>
+            <MenubarItem>Copy</MenubarItem>
+            <MenubarItem>Paste</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>View</MenubarTrigger>
+          <MenubarContent>
+            <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
+            <MenubarCheckboxItem checked>
+              Always Show Full URLs
+            </MenubarCheckboxItem>
+            <MenubarSeparator />
+            <MenubarItem inset onClick={() => {router.refresh()}}>
+              Reload <MenubarShortcut>⌘R</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger><Users className="h-5 w-5" /></MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem disabled>Current Members</MenubarItem>
+            <MenubarRadioGroup>
+              {sharedUserData?.map(user => (
+                <MenubarRadioItem key={user.userId} value={user.userId || 'user_0'}>{user.name}</MenubarRadioItem>
+              ))}
+            </MenubarRadioGroup>
+            <MenubarSeparator />
+            <MenubarItem inset><UserCog className="h-4 w-4" /><span className="pl-2">Edit Users </span></MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+      </div>
     </>
    );
 }

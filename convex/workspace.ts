@@ -108,3 +108,45 @@ export const getWorkspacesByCreator = query({
         return workspaces;
     }
 })
+
+
+export const getUsernamesByWorkspace = query({
+    args: { workspaceId: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        if (!workspace) {
+            return null;
+        }
+
+        // Ensure sharedUsers is an array and not null/undefined.
+        if (!Array.isArray(workspace.sharedUsers)) {
+            return []; // Return an empty array if no shared users.
+        }
+
+        const userDataPromises = workspace.sharedUsers.map(userId =>
+            ctx.db
+                .query("user")
+                .filter((q) => q.eq(q.field("userId"), userId))
+                .first()
+        );
+
+        const usersData = await Promise.all(userDataPromises);
+
+        const userData = usersData.map(_userData => ({
+            userId: _userData?.userId,
+            name: _userData?.name,
+        })).filter(user => user.userId != null); // Filter out any undefined results due to missing users.
+
+        console.log(userData);
+        return userData;
+    }
+});

@@ -45,7 +45,6 @@ const WorkspacePage = () => {
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
   if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId && !workspaceMeta?.sharedUsers.includes(user?.id || 'user_0'
   )) {
-    console.log(user?.id, workspaceMeta?.creator?.userId);
     return redirect('/');
   }
 

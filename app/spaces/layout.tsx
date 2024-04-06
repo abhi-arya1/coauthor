@@ -28,7 +28,7 @@ export default function SpacesLayout({
 
     return (
       <div className="h-screen flex justify-center items-center dark:bg-[#1F1F1F]">
-        <main className="overflow-y-auto dark:bg-[#1F1F1F]">
+        <main className="dark:bg-[#1F1F1F]">
             {children}
         </main>
       </div>

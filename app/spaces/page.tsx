@@ -111,25 +111,6 @@ export default function SpaceBuilder() {
           </DrawerHeader>
           <ScrollArea className="w-full whitespace-nowrap rounded-md border">
             <div className="flex w-max space-x-4 p-4">
-              {/* {works.map((artwork) => (
-                <figure key={artwork.artist} className="shrink-0">
-                  <div className="overflow-hidden rounded-md">
-                    <Image
-                      src="/coauth_metal.png"
-                      alt={`Photo by ${artwork.artist}`}
-                      className="aspect-[3/4] h-fit w-fit object-cover"
-                      width={300}
-                      height={400}
-                    />
-                  </div>
-                  <figcaption className="pt-2 text-xs text-muted-foreground">
-                    Photo by{" "}
-                    <span className="font-semibold text-foreground">
-                      {artwork.artist}
-                    </span>
-                  </figcaption>
-                </figure>
-              ))} */}
               { workspaces && workspaces?.map(space => (
                 <Card key={0} className="w-[350px]">
                   <CardHeader>

@@ -21,7 +21,7 @@ export default function MarketingLayout({
       <body className={`h-screen ${inter.className}`}>
       <ConvexClientProvider>
                   {children}
-              </ConvexClientProvider>
+      </ConvexClientProvider>
       </body>
     </html>
     

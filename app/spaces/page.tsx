@@ -16,9 +16,15 @@ export default function SpaceBuilder() {
   });
     
   return (
-    <div className="flex flex-col self-center justify-self-center">
-      <div>
-        Welcome, {user?.fullName || "User"}!
+    <div className="flex flex-row items-center justify-center gap-x-60">
+      <div className="absolute top-5 right-5">
+        <ModeToggle />
+      </div>
+      <div className="flex flex-col">
+        <span className="font-bold text-3xl">Welcome, {user?.fullName || "User"}!</span>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-xl font-semibold">Your Workspaces</span>
       </div>
     </div>
   );

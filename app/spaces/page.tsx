@@ -140,8 +140,8 @@ export default function SpaceBuilder() {
     
   return (
     <div className="flex flex-row items-center justify-center gap-x-60">
-      <div className="absolute inset-0 bg-white dark:bg-[#1F1F1F] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
-      <Boxes />
+      {/* <div className="absolute inset-0 bg-white dark:bg-[#1F1F1F] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" /> */}
+      {/* <Boxes /> */}
       <div className="absolute top-5 z-[999] left-5">
       <Breadcrumb>
       <BreadcrumbList>

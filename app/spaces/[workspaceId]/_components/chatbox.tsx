@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUpWideNarrow } from 'lucide-react';
+import { ArrowUpSquare, ArrowUpWideNarrow } from 'lucide-react';
 
 interface InputWithButtonProps {
   onInputSubmit: (value: string) => void;
@@ -27,6 +27,7 @@ export function InputWithButton({ onInputSubmit, placeholder }: InputWithButtonP
   const handleSubmit = () => {
     if (onInputSubmit && inputValue !== '') {
         onInputSubmit(inputValue);
+        setInputValue('');
     } else if (inputValue === '') {
       setPlaceholder('Please Input At Least One Value!')
     }
@@ -42,7 +43,7 @@ export function InputWithButton({ onInputSubmit, placeholder }: InputWithButtonP
         onChange={handleInputChange}
         onKeyPress={handleKeyPress}
       />
-      <Button type="submit" className="border-2" onClick={handleSubmit}><ArrowUpWideNarrow /></Button>
+      <Button type="submit" className="border-2" onClick={handleSubmit}><ArrowUpSquare /></Button>
     </div>
   );
 }

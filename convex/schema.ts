@@ -2,7 +2,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-    workspaces: defineTable({
+    workspace: defineTable({
         creatorID: v.number(),
         userIDs: v.array(v.number()),
         chatHistory: v.array(v.string()),
@@ -10,13 +10,13 @@ export default defineSchema({
         noteblock: v.optional(v.string()), 
     }),
 
-    webpages: defineTable({
+    webpage: defineTable({
         url: v.string(),
         title: v.string(),
         descriptionHoverMetaData: v.string(), 
     }),
 
-    users: defineTable({
+    user: defineTable({
         userID: v.number(), 
         pfpURL: v.string(), 
         email: v.string(), 

@@ -20,16 +20,24 @@ export const Navbar = () => {
             "z-50 fixed top-0 flex items-center w-full p-6",
             scrolled && "border-b shadow-sm"
         )}>
-            {/* <Link href="/">
+            <Link href="/">
                 <Image 
-                    src="/petrhead.png" // Your image path
+                    src="/coauth_peri.png" // Your image path
                     alt="Logo"
-                    width={70} // Adjust as needed
-                    height={70} // Adjust as needed
+                    width={40} // Adjust as needed
+                    height={40} // Adjust as needed
                     style={{ borderRadius: '10px', cursor: 'pointer' }}
-                    className="drop-shadow-2xl"
+                    className="drop-shadow-2xl hidden dark:block"
                 />
-            </Link> */}
+                <Image 
+                    src="/coauth_metal.png" // Your image path
+                    alt="Logo"
+                    width={40} // Adjust as needed
+                    height={40} // Adjust as needed
+                    style={{ borderRadius: '10px', cursor: 'pointer' }}
+                    className="drop-shadow-2xl dark:hidden"
+                />
+            </Link>
             <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-4">
                 {isLoading && (
                     <div>

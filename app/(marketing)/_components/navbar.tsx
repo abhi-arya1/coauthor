@@ -36,6 +36,7 @@ export const Navbar = () => {
                     className="drop-shadow-2xl dark:hidden"
                 />
             </Link>
+            <span className="ml-5 text-2xl font-semibold dark:text-white" >Coauthor</span>
             <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-4">
                 {isLoading && (
                     <div>

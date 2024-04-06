@@ -1,24 +1,30 @@
-import { MacbookScroll } from "@/components/ui/macbook-scroll";
-
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import Image from "next/image";
 
 export default function LandingPage() {
   return (
-    <div className="z-10 flex flex-col items-center justify-center">
-        <span className="text-6xl z-10 font-mono">coauthor.ai</span>
-        <MacbookScroll
-            title={
-                <span>
-                  Your next research assistant.
-                </span>
-              }
-            //   badge={
-            //     <Link href="https://peerlist.io/manuarora">
-            //       <Badge className="h-10 w-10 transform -rotate-12" />
-            //     </Link>
-            //   }
-              src={`/coauth_peri.png`}
-              showGradient={true}
+    <div className="z-10 flex flex-col items-center justify-center translate-y-[-150px]">
+        <ContainerScroll
+        titleComponent={
+          <>
+            <h1 className="text-4xl font-semibold text-black dark:text-white">
+              Your next <br />
+              <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
+                Research Assistant.
+              </span>
+            </h1>
+          </>
+        }
+      >
+        <Image
+          src={`/coauth_metal.png`}
+          alt="hero"
+          height={100}
+          width={700}
+          className="mx-auto rounded-2xl object-cover h-full object-left-top"
+          draggable={false}
         />
+      </ContainerScroll>
     </div>
   );
 }

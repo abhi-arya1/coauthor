@@ -4,3 +4,4 @@
 /dependencies
 /aws_lambda_artifact/
 aws_lambda_artifact.zip
+.env

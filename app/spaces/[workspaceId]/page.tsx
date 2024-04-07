@@ -2,6 +2,7 @@
 "use client";
 
 import { redirect, useParams } from "next/navigation";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import {
   HoverCard,
@@ -47,11 +48,12 @@ import { BlockNoteView, useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/react/style.css";
 import { useTheme } from "next-themes";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSearch } from "@/hooks/use-search";
 import { Spinner } from "@/components/spinner";
 import { sendChatMessage } from "@/lib/utils";
+import MarkdownContent from "@/components/markdowner";
+import WebBox from "./_components/webpagebox";
 
 
 const defaultChatHistory: ChatHistory = {
@@ -89,7 +91,8 @@ const WorkspacePage = () => {
 
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
   const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
-  const addToChatHistory = useMutation(api.workspace.addToChatHistory)
+  const addToChatHistory = useMutation(api.workspace.addToChatHistory);
+  const createWebpage = useMutation(api.webpage.createWebpage)
 
   const router = useRouter(); 
 
@@ -97,14 +100,25 @@ const WorkspacePage = () => {
     addToChatHistory({
       workspaceId: workspaceId.toString(),
       message: message,
-      role: 'user'
+      role: 'user',
+      pages: [{'title': 'NOPAGE'}]
     })
     setGeminiLoading(true);
     const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
     setGeminiLoading(false);
+    response.pages.map(page => {
+      createWebpage({
+        url: page.url,
+        title: page.title,
+        abstract: page.abstract,
+        authors: page.authors,
+        date: page.date
+      })
+    })
     addToChatHistory({
       workspaceId: workspaceId.toString(),
       message: response.parts[0],
+      pages: response.pages, 
       role: 'model'
     })
   }
@@ -247,20 +261,37 @@ const WorkspacePage = () => {
         >
 
           <ResizablePanel defaultSize={35}>
-            <div className="flex flex-col max-h-screen overflow-scroll items-end justify-end p-6">
-              <div className="flex flex-col">
-              {chatHistory.items.map((item, index) => (
-                <div key={index} style={{backgroundColor: '#f0f0f0', padding: '10px', marginBottom: '10px', borderRadius: '4px'}}>
-                  <strong>{item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}</strong>: {item.parts[0]}
-                </div>
-              ))}
+          <div className="flex flex-col max-h-screen min-w-50">
+              <div className="flex-1 overflow-scroll">
+                  <div className="flex flex-col p-6 text-wrap break-words">
+                    {chatHistory.items.map((item, index) => (
+                      <div
+                      key={index}
+                      className="bg-white dark:bg-[#484848] p-[10px] mb-[10px] rounded-md"
+                      >
+                        <strong className="text-black dark:text-white">
+                          {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
+                        </strong>
+                        : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
+                        { item.pages[0].title !== 'NOPAGE' && item.pages.map((page, index) => (
+                          <WebBox key={index} page={page} workspaceId={workspaceId.toString()} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
               </div>
-              <InputWithButton placeholder="Chat with Gemini" onInputSubmit={(input) => {handleChat(input)}}/>
-              { geminiLoading &&
-                <div className="flex flex-row self-center p-4">
-                  <Spinner /> <Sparkles /> <span>Gemini is Loading...</span>
-                </div>
-              }
+              <div className="bg-white dark:bg-[#1F1F1F] p-6">
+                <InputWithButton
+                  placeholder="Chat with Gemini"
+                  onInputSubmit={(input) => handleChat(input)}
+                />
+                {geminiLoading && (
+                  <div className="flex flex-row self-center p-4">
+                    <Sparkles />
+                    <span className="pl-4">Gemini is Loading...</span>
+                  </div>
+                )}
+              </div>
             </div>
           </ResizablePanel>
 

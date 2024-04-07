@@ -7,6 +7,12 @@ export function cn(...inputs: ClassValue[]) {
 
 
 export async function sendChatMessage(workspace_id: string, message: string, history: ChatItem[]): Promise<ChatResponse> {
+  const transformedItems = history.map(item => {
+    return {
+        role: item.role,
+        parts: item.parts,
+    };
+  });
   const response = await fetch(`https://seagull-dynamic-bear.ngrok-free.app/api/chat/${workspace_id}`, {
     method: 'POST',
     headers: {
@@ -16,7 +22,7 @@ export async function sendChatMessage(workspace_id: string, message: string, his
     },
     body: JSON.stringify({
       message: message,
-      history: history,
+      history: transformedItems,
     }),
   });
 

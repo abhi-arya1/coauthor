@@ -1,3 +1,4 @@
+import re
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum 
@@ -24,28 +25,33 @@ genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
 trained_message = """
-Hello, you are an AI model trained specifically to interact with research papers and articles for our application 
+Hello, you are an AI model trained specifically to interact with research papers and articles for a web application. 
 named Coauthor. I am a human operator who will be interacting with you to give you instructions and help support the application. 
 You are now Coauthor AI and you will be expected to do a variety of tasks such as web scrape information and generate research articles.
 Your name is Coauthor AI. 
 
-You will always be given the genre of the text you are interacting with and what the user requires for his research purposes. You will be 
-expected to generate research articles and sources of information based on the user's request and what they want to know about. For example, 
-if I were to ask you to generate research articles on the topic of "Machine Learning", you would be expected to generate a variety research articles.
+You will be interacting with a user who is looking for information on a specific topic, which they will most likely provide. You 
+will be expected to provide articles in certain formats to the user, based on their request. You have access to a variety of data at your 
+request, though you have to tell us how you want us to use it, by finding URLs on Google to these papers and information about them. 
 
-You will NOT be returning these research articles to the user, but you will be expected to web scrape information based on the user's request. For 
-example, if I were to ask you to web scrape information on the topic of "Machine Learning", giving the keyword 'Regression analysis', you would be 
-expected to web scrape any relevant information pertaining to this topic. 
+Once you find these articles, there's an example output that I want you to generate. I'll provide information here then give you an example. 
+Once you have found the webpages, you can provide any information you want BEFORE this next step. 
+Once you are ready to prompt the URLs, you will do so by first typing: "*7893URLS*:" by itself on a line, without quotations.
+After that, you will generate any number of URLs about the topic you have found (3-5 default, but base this on the user's request), and provide them as:
+"- Title: "title"- Abstract: "abstract" - Author: "author" - Date: "date ([Day Number] [Month in Words] [Year Number] Format)" - URL: "url"
+You will provide this information for each URL you find, and you will provide the information in this format, without any changes, and each bullet on a NEW LINE.
+For the next page, you would put *7894URLS*: and so on, but you will never generate more than 5 pages.
+So for example, if you had 3 pages, before "\n- Title", you MUST put "*7893URLS*:", then the page data, then "*7894URLS*:", then the next page data, and so on.
+DO NOT BOLD TITLES AND DO NOT CHANGE THE STYLE OF THIS AT ALL. YOU SHOULD FOLLOW THIS SYNTAX EXACTLY AS I HAVE PROVIDED. 
+NEVER EVER GO TO A NEW LINE UNLESS IT IS FOR ANOTHER BULLET POINT. ALL YOUR INFORMATION MUST BE ON THE SAME LINE
 
-I will be providing you the tools and information you need to complete these tasks, but you need to utilize these tools to generate the information.
-I have a few tasks for you to complete, and I will be providing you with the information you need to complete these tasks. 
+Then you will stop responding and end your response right then and there, with NO further generation. 
+NEVER EVER PROVIDE INFORMATION AFTER YOUR LAST URL, REGARDLESS OF WHAT YOU MAY THINK TO DO. 
 
-One tool I can give you is the web scraper. This tool will allow you to scrape information from a webpage based on the user's request. For example, 
-if I were to ask you to scrape information on the topic of "Machine Learning", you would be expected to utilize this tool and input the user's request
-of what they need from the article. This tool takes in the URL of the webpage, in which you will be generating and the KEYWORD of the topic, in which
-the user will be requesting. 
+I will be providing you the tools and information you need to complete these tasks, but you need to utilize these words for me to do so.
+Sometimes you may not have webpages to generate, so DO NOT FOLLOW ANY OF THE ABOVE FORMAT IN THAT CASE.
 
-Thank you for your help, and let's get started. Await my next steps.
+Thank you for your help, and let's get started. Here is a practice prompt:
 """
 
 
@@ -57,7 +63,45 @@ def send_message(_chat, message) -> tuple[list[dict], str]:
     except Exception as e:
         new_text = f"Error: {e}"
 
-    return new_text
+    def split_sections(text):
+        sections = re.split(r'\n(?=\*\d+URLS\*:\n)', text)
+        return [section.strip() for section in sections if section.strip()]
+    
+    def parse(text):
+        lines = text.split('\n')
+        title = ""
+        authors = ""
+        url = ""
+        date = ""
+        abstract = ""
+        for line in lines:
+            if line.startswith('- Title:'):
+                title = line.replace('- Title:', '').strip()
+            elif line.startswith('- Author:'):
+                authors = line.replace('- Author:', '').strip()
+            elif line.startswith('- Date:'):
+                date = line.replace('- Date:', '').strip()
+            elif line.startswith('- URL:'):
+                url = line.replace('- URL:', '').strip()
+            elif line.startswith('- Abstract:'):
+                abstract = line.replace('- Abstract:', '').strip()
+        return {
+            "title": title, 
+            "authors": authors, 
+            "url": url, 
+            "date": date,
+            "abstract": abstract
+        }
+    
+    sections = split_sections(new_text)
+    pages = [parse(section) for section in sections]
+    
+    if sections[0][0:2] == "*7": 
+        new_text = 'Here are the requested pages:'
+    else: 
+        new_text = sections[0]
+
+    return new_text, pages if pages else [{'title': 'NOPAGES'}]
 
 
 #################################################################################################
@@ -80,6 +124,7 @@ def process(link: str, keyword: str):
                 "role": "user",
                 "content": (f"""
                     {page_source}
+
                     Please parse out all references and instances of the topic of {keyword} from this raw HTML page.
                     Please provide markdown/raw text output and draw your own conclusions from that HTML.   
                     Please provide information strictly on {keyword} in your own raw text output                          
@@ -117,6 +162,7 @@ class ChatRequest(BaseModel):
     message: str
     history: list
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
@@ -144,13 +190,22 @@ async def chat(workspace_id, params: ChatRequest):
         {
             "role": "model",
             "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
+        },
+        {
+            "role": "user",
+            "parts": ["Please provide me a singular article on glare reduction using neural networks for spaceflight and extravehicular scenarios"]
+        },
+        {
+            "role": "model",
+            "parts": ["Sure, here is an article:\n*7893URLS*:\n- Title: Deep Learning and Artificial Neural Networks for Spacecraft Dynamics, Navigation and Control\n- Abstract: The growing interest in Artificial Intelligence is pervading several domains of technology and robotics research. Only recently has the space community started to investigate deep learning methods and artificial neural networks for space systems. This paper aims at introducing the most relevant characteristics of these topics for spacecraft dynamics control, guidance and navigation. The most common artificial neural network architectures and the associated training methods are examined, trying to highlight the advantages and disadvantages of their employment for specific problems. In particular, the applications of artificial neural networks to system identification, control synthesis and optical navigation are reviewed and compared using quantitative and qualitative metrics. This overview presents the end-to-end deep learning frameworks for spacecraft guidance, navigation and control together with the hybrid methods in which the neural techniques are coupled with traditional algorithms to enhance their performance levels.\n- Author: Stefano Silvestrini, Michele Lavagna\n- Date: 31 August 2022\n- URL: https://www.mdpi.com/2504-446X/6/10/270\n*7894URLS*:\n(NEXT PAGE HERE)"]
         }
     ] + params.history)
     message = params.message
-    output = send_message(_chat, message)
+    output, pages = send_message(_chat, message)
 
     return {
         "role": "model",
         "parts": [output], 
+        "pages": pages,
         "id": workspace_id
     }

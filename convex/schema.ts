@@ -7,7 +7,6 @@ export default defineSchema({
         name: v.string(), 
         sharedUsers: v.array(v.string()),
         chatHistory: v.optional(v.any()),
-        webpages: v.optional(v.string()),
         noteblock: v.optional(v.string()), 
         bookmarks: v.optional(v.array(v.id("webpage")))
     }),
@@ -15,9 +14,9 @@ export default defineSchema({
     webpage: defineTable({
         url: v.string(),
         title: v.string(),
-        description: v.string(),
-        imageUrl: v.string(),
-        firstContent: v.string(), 
+        abstract: v.string(),
+        authors: v.string(),
+        date: v.string(), 
     })
     .index("byUrl", ["url"]),
 

@@ -34,7 +34,6 @@ export const createWorkspace = mutation({
             name: args.name,
             sharedUsers: [],
             chatHistory: args.chatHistory,
-            webpages: "",
             noteblock: "",
             bookmarks: []
         });
@@ -70,7 +69,6 @@ export const getWorkspaceById = query({
             name: workspace.name,
             sharedUsers: workspace.sharedUsers,
             chatHistory: workspace.chatHistory,
-            webpages: workspace.webpages,
             noteblock: workspace.noteblock,
             bookmarks: workspace.bookmarks,
         };
@@ -79,7 +77,7 @@ export const getWorkspaceById = query({
 
 
 export const addToChatHistory = mutation({
-    args: { workspaceId: v.string(), message: v.string(), role: v.string() },
+    args: { workspaceId: v.string(), message: v.string(), role: v.string(), pages: v.any() },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
@@ -98,6 +96,7 @@ export const addToChatHistory = mutation({
         workspace.chatHistory.items.push({
             role: args.role, 
             parts: [args.message],
+            pages: args.pages
         })
 
         const _workspace = await ctx.db.patch(workspace._id, {
@@ -105,7 +104,6 @@ export const addToChatHistory = mutation({
             name: workspace.name,
             sharedUsers: workspace.sharedUsers,
             chatHistory: workspace.chatHistory,
-            webpages: workspace.webpages,
             noteblock: workspace.noteblock,
             bookmarks: workspace.bookmarks,
         })
@@ -135,7 +133,6 @@ export const updateChatHistory = mutation({
             name: workspace.name,
             sharedUsers: workspace.sharedUsers,
             chatHistory: args.chatHistory,
-            webpages: workspace.webpages,
             noteblock: workspace.noteblock,
             bookmarks: workspace.bookmarks,
         })
@@ -185,7 +182,6 @@ export const getWorkspacesByCreator = query({
                 allNames, 
                 sharedUsers: wksp.sharedUsers,
                 chatHistory: wksp.chatHistory,
-                webpages: wksp.webpages,
                 noteblock: wksp.noteblock,
                 bookmarks: wksp.bookmarks,
                 _id: wksp._id
@@ -235,7 +231,6 @@ export const addUserToWorkspace = mutation({
             name: workspace.name,
             sharedUsers: workspace.sharedUsers,
             chatHistory: workspace.chatHistory,
-            webpages: workspace.webpages,
             noteblock: workspace.noteblock,
             bookmarks: workspace.bookmarks,
         })
@@ -270,7 +265,6 @@ export const removeUserFromWorkspace = mutation({
             name: workspace.name,
             sharedUsers: workspace.sharedUsers,
             chatHistory: workspace.chatHistory,
-            webpages: workspace.webpages,
             noteblock: workspace.noteblock,
             bookmarks: workspace.bookmarks,
 

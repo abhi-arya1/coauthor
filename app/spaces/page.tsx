@@ -156,7 +156,7 @@ export default function SpaceBuilder() {
                 
               }}
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-7 w-7" />
             </div>
           </AlertDialogTrigger>
           <AlertDialogContent className='z-[99999]'>

@@ -21,7 +21,7 @@ export default function SpacesLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div className="max-h-screen flex dark:bg-[#1F1F1F]">
+    <div className="max-h-screen flex dark:bg-[#1F1F1F]" style={{ maxWidth: '100vw', maxHeight: '100vh', overflow: 'auto' }}>
       <main className="w-full max-h-screen dark:bg-[#1F1F1F]">
       <SearchCommand workspaceId={workspaceId.toString()} />
         {children}

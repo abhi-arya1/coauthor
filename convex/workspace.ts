@@ -230,6 +230,37 @@ export const addToChatHistory = mutation({
     }
 })
 
+export const updateNoteblock = mutation({
+    args: { workspaceId: v.string(), noteblock: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        if (!workspace) {
+            return null;
+        }
+
+        const _workspace = await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: workspace.chatHistory,
+            noteblock: args.noteblock,
+            bookmarks: workspace.bookmarks,
+        })
+
+        return _workspace;
+    }
+})
+
+
 export const updateChatHistory = mutation({
     args: { workspaceId: v.string(), chatHistory: v.any() },
     handler: async (ctx, args) => {

@@ -57,6 +57,7 @@ import WebBox from "./_components/webpagebox";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 import { GenericId } from "convex/values";
 import { ScrollBar } from "@/components/ui/scroll-area";
+import { PartialBlock } from "@blocknote/core";
 
 
 const defaultChatHistory: ChatHistory = {
@@ -69,11 +70,10 @@ const WorkspacePage = () => {
   const { workspaceId } = useParams();
   const { user } = useUser(); 
   const { resolvedTheme } = useTheme();
-  const [chatHistory, setChatHistory] = useState<ChatHistory>(defaultChatHistory); 
-  const [geminiLoading, setGeminiLoading] = useState(false);
+  const [ chatHistory, setChatHistory ] = useState<ChatHistory>(defaultChatHistory); 
+  const [ geminiLoading, setGeminiLoading ] = useState(false);
   const search = useSearch();
 
-  const editor = useCreateBlockNote();
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
   if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId && !workspaceMeta?.sharedUsers.includes(user?.id || 'user_0'
   )) {
@@ -100,6 +100,10 @@ const WorkspacePage = () => {
   const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
   const addToChatHistory = useMutation(api.workspace.addToChatHistory);
   const createWebpage = useMutation(api.webpage.createWebpage)
+  const updateNoteblock = useMutation(api.workspace.updateNoteblock);
+
+  const editor = useCreateBlockNote() // { 
+    // initialContent: workspaceMeta?.noteblock ? JSON.parse(workspaceMeta?.noteblock) as PartialBlock[] : undefined });
 
   const router = useRouter(); 
 
@@ -139,7 +143,7 @@ const WorkspacePage = () => {
   };
 
   return ( 
-    <div className="flex flex-col h-screen w-screen">
+    <div className="flex flex-col w-screen">
 
       <div className="absolute top-5 left-5">
         <Breadcrumb>
@@ -268,7 +272,7 @@ const WorkspacePage = () => {
       <div className="flex flex-grow pt-12">
         <ResizablePanelGroup
           direction="horizontal"
-          className="max-h-screen w-full rounded-md"
+          className="w-full overflow-hidden"
         >
 
           <ResizablePanel defaultSize={35} minSize={28} maxSize={65}>
@@ -327,7 +331,17 @@ const WorkspacePage = () => {
               <ResizableHandle withHandle />
               
               <ResizablePanel minSize={25}>
-                <BlockNoteView className="py-5 z-0" editor={editor} theme={resolvedTheme === "dark" ? "dark" : "light"}/>
+                <BlockNoteView 
+                  className="py-5 z-0" 
+                  editor={editor} 
+                  theme={resolvedTheme === "dark" ? "dark" : "light"}
+                  onChange={() => {
+                    updateNoteblock({
+                      workspaceId: workspaceId.toString(),
+                      noteblock: JSON.stringify(editor.document, null, 2)
+                    })
+                  }}
+                />
               </ResizablePanel>
 
             </ResizablePanelGroup>

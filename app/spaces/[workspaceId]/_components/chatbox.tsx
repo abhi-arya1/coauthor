@@ -35,7 +35,7 @@ export function InputWithButton({ onInputSubmit, placeholder }: InputWithButtonP
 
 
   return (
-    <div className="flex w-[450px] self-center items-center space-x-2 pt-2">
+    <div className="flex w-[450px] self-center items-center justify-self-end space-x-2 pt-2">
       <Input
         type="text"
         placeholder={pholder}

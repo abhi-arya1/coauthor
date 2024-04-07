@@ -271,47 +271,49 @@ const WorkspacePage = () => {
           className="h-full w-full rounded-md"
         >
 
-          <ResizablePanel defaultSize={35}>
-          <div className="flex flex-col max-h-screen min-w-50">
-              <div className="flex-1 overflow-scroll">
-                  <div className="flex flex-col p-6 text-wrap text-ellipsis break-words overflow-hidden">
-                    {chatHistory.items.map((item, index) => (
-                      <div
-                      key={index}
-                      className="bg-white dark:bg-[#484848] p-6 mb-[10px] rounded-md overflow-hidden"
-                      >
-                        <strong className="text-black dark:text-white">
-                          {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
-                        </strong>
-                        : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
-                        { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
-                          <WebBox key={index} pageData={page} workspaceId={workspaceId.toString()} />
-                        ))}
-                      </div>
+          <ResizablePanel defaultSize={35} minSize={28} maxSize={65}>
+            <div className="flex flex-col max-h-screen items-center justify-center min-w-[50%]">
+              <div className="flex-1 overflow-auto">
+                <div className="flex flex-col p-6 text-wrap text-ellipsis break-words overflow-hidden">
+                {chatHistory.items.map((item, index) => (
+                  <div
+                  key={index}
+                  className="bg-white dark:bg-[#484848] p-6 mb-10 rounded-md overflow-hidden"
+                  >
+                    <strong className="text-black dark:text-white">
+                      {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
+                    </strong>
+                    : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
+                    { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
+                      <WebBox key={index} pageData={page} workspaceId={workspaceId.toString()} />
                     ))}
                   </div>
+                ))}
+                </div>
               </div>
-              <div className="bg-white dark:bg-[#1F1F1F] p-6">
+              <div className="bg-white dark:bg-[#1F1F1F] p-6 w-full"> {/* Ensure full width */}
                 <InputWithButton
                   placeholder="Chat with Gemini"
                   onInputSubmit={(input) => handleChat(input)}
                 />
                 {geminiLoading && (
-                  <div className="flex flex-row self-center p-4">
-                    <Sparkles />
-                    <span className="pl-4">Gemini is Loading...</span>
-                  </div>
-                )}
+                            <div className="flex flex-row self-center p-4">
+                              <Sparkles />
+                              <span className="pl-4">Gemini is Loading...</span>
+                            </div>
+                          )}
               </div>
             </div>
           </ResizablePanel>
+
+
 
           <ResizableHandle withHandle />
           
           <ResizablePanel>
             <span className="font-bold text-xl p-4">Bookmarked Pages</span>
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
-              <ResizablePanel>
+              <ResizablePanel minSize={25}>
               <ScrollArea className="p-10 w-full whitespace-nowrap rounded-md overflow-x-auto bg-inherit">
                     <div className="flex flex-row w-max space-x-4 p-4">
                       {bookmarkPageData?.map((page, index) => (
@@ -324,7 +326,7 @@ const WorkspacePage = () => {
 
               <ResizableHandle withHandle />
               
-              <ResizablePanel>
+              <ResizablePanel minSize={25}>
                 <BlockNoteView className="py-5 z-0" editor={editor} theme={resolvedTheme === "dark" ? "dark" : "light"}/>
               </ResizablePanel>
 

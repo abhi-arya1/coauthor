@@ -31,9 +31,9 @@ const WebBox = ({ pageData, workspaceId }: BoxParams) => {
 
     return ( 
         <div className="pt-4">
-        <Card className="max-w-[350px] max-h-[350px] p-2">
+        <Card className="max-w-[350px] max-h-[350px] p-2 shadow-2xl">
         <CardHeader>
-        <CardTitle><span className="text-wrap">{page.title}</span></CardTitle>
+        <CardTitle><span className="text-wrap dark:text-[#B8BEDD] text-[#1F1F1F]">{page.title}</span></CardTitle>
         <CardDescription className="overflow-hidden text-ellipsis"><p className="text-wrap text-ellipsis max-h-[140px]">{page.abstract}...</p></CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-between">

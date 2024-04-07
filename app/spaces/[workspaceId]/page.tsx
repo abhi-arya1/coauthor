@@ -293,7 +293,7 @@ const WorkspacePage = () => {
                 {chatHistory.items.map((item, index) => (
                   <div
                   key={index}
-                  className="bg-white dark:bg-[#484848] p-6 mb-10 rounded-md overflow-hidden"
+                  className="bg-white dark:bg-[#1F1F1F] p-6 mb-10 rounded-lg overflow-hidden shadow-2xl"
                   >
                     <strong className="text-black dark:text-white">
                       {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
@@ -326,7 +326,7 @@ const WorkspacePage = () => {
           <ResizableHandle withHandle />
           
           <ResizablePanel>
-            <span className="font-bold text-xl p-4">Bookmarked Pages</span>
+            <span className="font-bold text-xl p-4 text-[#B8BEDD]">Bookmarked Pages</span>
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel minSize={25}>
               <ScrollArea className="p-10 w-full whitespace-nowrap rounded-md overflow-x-auto bg-inherit">

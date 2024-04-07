@@ -314,7 +314,15 @@ export const getWorkspacesByCreator = query({
             .filter((q) => q.eq(q.field("creator"), creatorUser._id))
             .collect();
 
-        const workspaces = await Promise.all(wksps.map(async (wksp) => {
+        const shared = await ctx.db
+        .query("workspace")
+        .collect();
+
+        const sharedWorkspaces = shared.filter(workspace => workspace.sharedUsers.includes(creatorUser.userId));
+
+        const _wksps = [...wksps, ...sharedWorkspaces]
+
+        const workspaces = await Promise.all(_wksps.map(async (wksp) => {
             const sharedUserNames = await Promise.all(
                 wksp.sharedUsers.map(async (userId) => {
                     const user = await ctx.db
@@ -325,7 +333,12 @@ export const getWorkspacesByCreator = query({
                 })
             );
 
-            const allNames = [creatorUser.name, ...sharedUserNames].join(", ");
+            const creator = await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("_id"), wksp.creator))
+            .first();
+
+            const allNames = [creator?.name, ...sharedUserNames].join(", ");
 
             return {
                 creator: wksp.creator,

@@ -109,7 +109,7 @@ export default function SpaceBuilder() {
           <DrawerContent>
             <DrawerHeader>Workspaces</DrawerHeader>
             {workspaces && workspaces.length !== 0 ? (
-              <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+              <ScrollArea className="w-full whitespace-nowrap text-wrap rounded-md border">
                 <div className="flex w-max space-x-4 p-4">
                   {workspaces?.map((space) => (
                     <Card key={0} className="w-[350px]">

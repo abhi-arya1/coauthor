@@ -105,7 +105,11 @@ const WorkspacePage = () => {
         <ModeToggle />
       </div>
 
-      <div className="absolute right-16 top-5">
+      <div className="absolute top-6 right-[4.4rem]">
+        <UserButton />
+      </div>
+
+      <div className="absolute right-28 top-5">
         <Menubar className="bg-white dark:bg-[#1a1a1a]">
         <MenubarMenu>
           <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">File</MenubarTrigger>
@@ -116,14 +120,6 @@ const WorkspacePage = () => {
             <MenubarItem>
               Capture Workspace 
             </MenubarItem>
-            {/* <MenubarSub>
-              <MenubarSubTrigger>Share</MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarItem>Email link</MenubarItem>
-                <MenubarItem>Messages</MenubarItem>
-                <MenubarItem>Notes</MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub> */}
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>

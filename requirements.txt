@@ -1,1 +1,6 @@
 fastapi 
+python-dotenv
+selenium 
+pydantic 
+requests
+google-generativeai 

@@ -178,6 +178,40 @@ export const addUserToWorkspace = mutation({
 })
 
 
+export const removeUserFromWorkspace = mutation({
+    args: { workspaceId: v.string(), userId: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        if (!workspace) {
+            return null;
+        }
+
+        workspace.sharedUsers = workspace.sharedUsers.filter((userId) => userId !== args.userId);
+
+        const _workspace = await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: workspace.chatHistory,
+            webpages: workspace.webpages,
+            noteblock: workspace.noteblock,
+            bookmarks: workspace.bookmarks,
+
+        });
+
+        return _workspace;
+    },
+})
+
 
 export const getUsernamesByWorkspace = query({
     args: { workspaceId: v.string() },
@@ -201,6 +235,13 @@ export const getUsernamesByWorkspace = query({
             return []; // Return an empty array if no shared users.
         }
 
+        let rootUserData = await ctx.db 
+        .query("user")
+        .filter((q) => q.eq(q.field("_id"), workspace.creator))
+        .first();
+
+        workspace.sharedUsers.unshift(rootUserData?.userId || 'user_0');
+
         const userDataPromises = workspace.sharedUsers.map(userId =>
             ctx.db
                 .query("user")
@@ -213,6 +254,9 @@ export const getUsernamesByWorkspace = query({
         const userData = usersData.map(_userData => ({
             userId: _userData?.userId,
             name: _userData?.name,
+            email: _userData?.email,
+            pfpUrl: _userData?.pfpUrl,
+            _id: _userData?._id
         })).filter(user => user.userId != null); // Filter out any undefined results due to missing users.
 
         return userData;

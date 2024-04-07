@@ -36,9 +36,9 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import { UserButton, useUser } from "@clerk/clerk-react";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { UserCog, Users } from "lucide-react";
+import { CircleMinus, Crown, Minus, UserCog, UserPlus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/mode_toggle";
 import { InputWithButton } from "./_components/chatbox";
@@ -72,6 +72,7 @@ const WorkspacePage = () => {
 
 
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
+  const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
 
   const router = useRouter(); 
 
@@ -172,20 +173,35 @@ const WorkspacePage = () => {
               {sharedUserData?.length === 0 && (
                 <MenubarRadioItem value="none" className="text-muted-foreground italic">No Shared Users...</MenubarRadioItem>
               )}
-              {sharedUserData?.map(user => (
-                <HoverCard>
+              {sharedUserData?.map(_user => (
+                <HoverCard key={0}>
                   <HoverCardTrigger>
-                    <MenubarRadioItem key={user.userId} value={user.userId || 'user_0'}>{user.name}</MenubarRadioItem>
+                    <MenubarRadioItem key={_user.userId} value={_user.userId || 'user_0'} className="items-center">
+                      {_user.name} 
+                      {_user._id === workspaceMeta?.creator?._id && <Crown className="h-4 w-4 pl-1 text-orange-500 dark:text-[#FFD700]" />}  
+                      {_user._id !== workspaceMeta?.creator?._id && user?.id == workspaceMeta?.creator?.userId && <CircleMinus className="h-6 w-6 pl-2 hover:text-red-700" onClick={key => {
+                          removeFromWorkspace({
+                            userId: _user.userId || 'user_0',
+                            workspaceId: workspaceId.toString()
+                          })
+                      }}/>}
+                    </MenubarRadioItem>
                   </HoverCardTrigger>
-                  <HoverCardContent sideOffset={6} side="left">
-                    <h4 className="text-sm font-semibold">{user?.name}</h4>
-                    <p className="text-sm">{user?.userId}</p>
+                  <HoverCardContent sideOffset={5} side="left">
+                    <div className="flex flex-col">
+                      <div className="flex flex-row items-center justify-start">
+                      { /* eslint-disable-next-line @next/next/no-img-element */ }
+                      <img src={_user?.pfpUrl} alt={_user?.name} className="h-5 w-5 rounded-full" />
+                      <h4 className="text-sm font-semibold pl-2">{_user?.name}</h4>
+                      </div>
+                      <a className="text-sm italic pt-2" href={`mailto:${_user?.email}`}>{_user?.email}</a>
+                    </div>
                   </HoverCardContent>
                 </HoverCard>
               ))}
             </MenubarRadioGroup>
             <MenubarSeparator />
-            <MenubarItem inset onClick={useSearch().onOpen}><UserCog className="h-4 w-4" /><span className="pl-2">Edit Users </span></MenubarItem>
+            <MenubarItem inset onClick={useSearch().onOpen}><UserPlus className="h-4 w-4" /><span className="pl-2">Add Users </span></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>

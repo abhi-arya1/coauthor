@@ -22,7 +22,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ markdown }) => {
     markdownToHtml(markdown).then(setHtmlContent);
   }, [markdown]);
 
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} className="text-sm pl-3" />;
+  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 }
 
 export default MarkdownContent;

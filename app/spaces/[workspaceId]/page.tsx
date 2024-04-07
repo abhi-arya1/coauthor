@@ -54,10 +54,10 @@ import { Spinner } from "@/components/spinner";
 import { sendChatMessage } from "@/lib/utils";
 import MarkdownContent from "@/components/markdowner";
 import WebBox from "./_components/webpagebox";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 import { ScrollBar } from "@/components/ui/scroll-area";
-import { PartialBlock } from "@blocknote/core";
+import { RoomProvider } from "@/liveblocks.config";
+import { ClientSideSuspense } from "@liveblocks/react";
+import { Editor } from "@/components/editor";
 
 
 const defaultChatHistory: ChatHistory = {
@@ -73,9 +73,6 @@ const WorkspacePage = () => {
   const [ chatHistory, setChatHistory ] = useState<ChatHistory>(defaultChatHistory); 
   const [ geminiLoading, setGeminiLoading ] = useState(false);
   const search = useSearch();
-
-  const doc = new Y.Doc();
-  const provider = new WebrtcProvider(workspaceId.toString(), doc)
 
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
   if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId && !workspaceMeta?.sharedUsers.includes(user?.id || 'user_0'
@@ -103,18 +100,6 @@ const WorkspacePage = () => {
   const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
   const addToChatHistory = useMutation(api.workspace.addToChatHistory);
   const createWebpage = useMutation(api.webpage.createWebpage)
-  const updateNoteblock = useMutation(api.workspace.updateNoteblock);
-
-  const editor = useCreateBlockNote({
-    collaboration: {
-      provider,
-      fragment: doc.getXmlFragment("document-store"),
-      user: {
-        name: user?.fullName || "Anonymous",
-        color: "#ff0000",
-      },
-    },
-  });
 
   const router = useRouter(); 
 
@@ -342,17 +327,11 @@ const WorkspacePage = () => {
               <ResizableHandle withHandle />
               
               <ResizablePanel minSize={25}>
-                <BlockNoteView 
-                  className="py-5 z-0" 
-                  editor={editor} 
-                  theme={resolvedTheme === "dark" ? "dark" : "light"}
-                  onChange={() => {
-                    updateNoteblock({
-                      workspaceId: workspaceId.toString(),
-                      noteblock: JSON.stringify(editor.document, null, 2)
-                    })
-                  }}
-                />
+              <RoomProvider id="my-room" initialPresence={{}}>
+                <ClientSideSuspense fallback="Loading…">
+                  {() => <Editor workspaceId={workspaceId.toString()} />}
+                </ClientSideSuspense>
+              </RoomProvider>
               </ResizablePanel>
 
             </ResizablePanelGroup>

@@ -152,7 +152,7 @@ class ChatMessage(BaseModel):
 async def say_hi():
     return {
         "message": "Hello from CoAuthor API!",
-        "url": f"Serving on AWS URL: {getenv('AWS_URL')}"
+        "url": f"Serving on ngrok URL: https://seagull-dynamic-bear.ngrok-free.app/"
         }
 
 @app.post('/api/chat/{workspace_id}') 

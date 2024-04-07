@@ -57,12 +57,12 @@ export const getWebpagesByWorkspace = query({
             .first();
 
         if (!workspace) { return null; }
-        const chatPages = workspace?.chatHistory?.items.map((item: any) => item.pages) || []; 
+        const chatPages = workspace?.chatHistory?.items.flatMap((item: any) => item.pages) || []; 
 
         const webpages = await ctx.db
         .query("webpage")
         .collect();
-        
+
         const match = webpages.filter(webpage => chatPages.includes(webpage.title));
         const webpageIds = match.map(webpage => webpage._id);
         return webpageIds;

@@ -109,6 +109,7 @@ const WorkspacePage = () => {
       role: 'user',
       pages: ['NOPAGE']
     })
+
     setGeminiLoading(true);
     const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
     setGeminiLoading(false);
@@ -284,7 +285,9 @@ const WorkspacePage = () => {
                     </strong>
                     : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
                     { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
-                      <WebBox isInChatbox={true} key={index} pageData={page} workspaceId={workspaceId.toString()} />
+                      item.pages.includes(page.title) ? 
+                      (<WebBox isInChatbox={true} key={index} pageData={page} workspaceId={workspaceId.toString()} />) 
+                      : (<></>)
                     ))}
                   </div>
                 ))}

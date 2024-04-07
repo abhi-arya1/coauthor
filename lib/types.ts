@@ -14,7 +14,8 @@ interface Page {
     authors: string, 
     url: string, 
     date: string,
-    abstract: string
+    abstract: string,
+    
 }
 
 interface ChatResponse { 

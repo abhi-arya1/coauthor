@@ -176,9 +176,9 @@ const WorkspacePage = () => {
           <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">File</MenubarTrigger>
           <MenubarContent>
             <MenubarItem onClick = {handlePrint}>
-              Save 
+              Save <MenubarShortcut>⌘Z</MenubarShortcut>
             </MenubarItem>
-            <MenubarItem>
+            <MenubarItem onClick={handlePrint}>
               Capture Workspace 
             </MenubarItem>
           </MenubarContent>
@@ -192,31 +192,11 @@ const WorkspacePage = () => {
             <MenubarItem>
               Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
             </MenubarItem>
-            <MenubarSeparator />
-            <MenubarSub>
-              <MenubarSubTrigger>Find</MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarItem>Search the web</MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>Find...</MenubarItem>
-                <MenubarItem>Find Next</MenubarItem>
-                <MenubarItem>Find Previous</MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub>
-            <MenubarSeparator />
-            <MenubarItem>Cut</MenubarItem>
-            <MenubarItem>Copy</MenubarItem>
-            <MenubarItem>Paste</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">View</MenubarTrigger>
           <MenubarContent>
-            <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
-            <MenubarCheckboxItem checked>
-              Always Show Full URLs
-            </MenubarCheckboxItem>
-            <MenubarSeparator />
             <MenubarItem inset onClick={() => {router.refresh()}}>
               Reload <MenubarShortcut>⌘R</MenubarShortcut>
             </MenubarItem>
@@ -275,7 +255,7 @@ const WorkspacePage = () => {
         >
 
           <ResizablePanel defaultSize={35} minSize={28} maxSize={65}>
-            <div className="flex flex-col max-h-screen justify-between min-w-[50%]">
+            <div className="flex flex-col max-h-screen min-h-screen justify-between min-w-[50%]">
               <div className="flex-1 overflow-auto">
                 <div className="flex flex-col p-6 text-wrap text-ellipsis break-words overflow-hidden">
                 {chatHistory.items.map((item, index) => (
@@ -284,9 +264,9 @@ const WorkspacePage = () => {
                   className="bg-white dark:bg-[#1F1F1F] p-6 mb-10 rounded-lg overflow-hidden shadow-2xl"
                   >
                     <strong className="text-black dark:text-white">
-                      {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
+                      {item.role === 'user' ? (user?.firstName + ` (${workspaceMeta?.name}):`) : <div className="flex flex-row items-center"><span className="pr-2">Coauthor</span> <span className="bg-blue-600 font-normal text-xs py-[1px] px-2 rounded-md flex flex-row items-center gap-x-1"><Sparkles className="h-3 w-3"/>AI</span>:</div> }
                     </strong>
-                    : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
+                     <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
                     { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
                       item.pages.includes(page.title) ? 
                       (<WebBox isInChatbox={true} key={index} pageData={page} workspaceId={workspaceId.toString()} />) 
@@ -305,7 +285,7 @@ const WorkspacePage = () => {
                             <div className="flex flex-row self-center items-center gap-x-2 p-4">
                               <Sparkles className="h-4 w-4 text-muted-foreground"/>
                               <Spinner size="default" />
-                              <span className="text-muted-foreground">Gemini is Loading...</span>
+                              <span className="text-muted-foreground">Coauthor AI is Loading...</span>
                             </div>
                           )}
               </div>

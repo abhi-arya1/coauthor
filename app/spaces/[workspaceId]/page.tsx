@@ -70,6 +70,10 @@ const WorkspacePage = () => {
 
   const router = useRouter(); 
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return ( 
     <div className="flex flex-col h-screen w-screen">
 
@@ -100,7 +104,7 @@ const WorkspacePage = () => {
         <MenubarMenu>
           <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">File</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
+            <MenubarItem onClick = {handlePrint}>
               Save 
             </MenubarItem>
             <MenubarItem>

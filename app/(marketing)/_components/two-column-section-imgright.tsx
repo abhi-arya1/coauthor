@@ -27,9 +27,9 @@ const TwoColumnSectionRightImg = ({ description, title }: TwoColSecProps) => {
 
         <div className="w-full md:w-1/2 px-4 flex justify-center items-center">
           <Tilt className="parallax-effect-glare-scale mt-5 rounded-md drop-shadow-2xl" style={{ height: '300px', backgroundColor: 'darkgrey' }} glareEnable={true} glareMaxOpacity={0.45} scale={1.02} tiltAngleYInitial={20} tiltEnable={true}>
-            <div style={{ height: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
-                <img className='drop-shadow-2xl hidden dark:block rounded-md' src="chat_with_ai_dark.png" alt="tilt-img" />
-                <img className='drop-shadow-2xl dark:hidden rounded-md' src="chat_with_ai_light.png" alt="tilt-img" />
+            <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
+                <img className='drop-shadow-2xl hidden dark:block rounded-md' src="horiz_chat_with_ai_dark.jpeg" alt="tilt-img" />
+                <img className='drop-shadow-2xl dark:hidden rounded-md' src="horiz_chat_with_ai_light.jpeg" alt="tilt-img" />
             </div>
             </Tilt>
         </div>

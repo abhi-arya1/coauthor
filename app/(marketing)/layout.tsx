@@ -1,3 +1,4 @@
+import Footer from "./_components/footer";
 import { Navbar } from "./_components/navbar";
 import { AuroraBackground } from "@/components/ui/aurora_background";
 
@@ -13,7 +14,7 @@ const MarketingLayout = ({
                 <main className="h-full w-full pt-40 pb-40 dark:text-white">
                     {children}
                 </main>
-            </AuroraBackground>
+            </AuroraBackground >
         </div>
      );
 }

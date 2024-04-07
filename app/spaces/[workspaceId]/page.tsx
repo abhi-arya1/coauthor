@@ -264,7 +264,7 @@ const WorkspacePage = () => {
                   className="bg-white dark:bg-[#1F1F1F] p-6 mb-10 rounded-lg overflow-hidden shadow-2xl"
                   >
                     <strong className="text-black dark:text-white">
-                      {item.role === 'user' ? (user?.firstName + ` (${workspaceMeta?.name}):`) : <div className="flex flex-row items-center"><span className="pr-2">Coauthor</span> <span className="bg-blue-600 font-normal text-xs py-[1px] px-2 rounded-md flex flex-row items-center gap-x-1"><Sparkles className="h-3 w-3"/>AI</span>:</div> }
+                      {item.role === 'user' ? (user?.firstName + ` (${workspaceMeta?.name}):`) : <div className="flex flex-row items-center"><span className="pr-2">Coauthor</span> <span className="bg-blue-600 font-normal text-xs py-[1px] px-2 rounded-md flex flex-row items-center gap-x-1"><Sparkles className="h-3 w-2"/>AI</span>:</div> }
                     </strong>
                      <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
                     { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
@@ -278,7 +278,7 @@ const WorkspacePage = () => {
               </div>
               <div className="bg-white dark:bg-[#1F1F1F] p-6 w-full translate-y-[-48px]"> {/* Ensure full width */}
                 <InputWithButton
-                  placeholder="Chat with Gemini"
+                  placeholder="Chat with Coauthor"
                   onInputSubmit={(input) => handleChat(input)}
                 />
                 {geminiLoading && (

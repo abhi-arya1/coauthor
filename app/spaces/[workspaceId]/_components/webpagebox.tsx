@@ -30,10 +30,10 @@ const WebBox = ({ pageData, workspaceId }: BoxParams) => {
     }, [bookmarks, page._id, setBookmarked])
 
     return ( 
-        <Card className="w-[350px] h-[350px] p-2">
+        <Card className="max-w-[350px] max-h-[350px] p-2">
         <CardHeader>
         <CardTitle><span className="text-wrap">{page.title}</span></CardTitle>
-        <CardDescription className="overflow-hidden"><p className="max-h-[140px] text-wrap">{page.abstract}...</p></CardDescription>
+        <CardDescription className="overflow-hidden"><p className="text-wrap">{page.abstract}...</p></CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-between">
             <Button onClick={() => {window.open(page.url)}}>

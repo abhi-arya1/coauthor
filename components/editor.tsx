@@ -67,6 +67,7 @@ function BlockNote({ doc, provider, workspaceId }: EditorProps) {
   });
 
   return <BlockNoteView 
+    className="p-4"
     theme={resolvedTheme === "dark" ? "dark" : "light"}
     editor={editor} 
     onChange={() => {

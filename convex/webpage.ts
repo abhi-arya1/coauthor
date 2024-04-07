@@ -26,6 +26,10 @@ export const createWebpage = mutation({
             return null;
         }
 
+        if (args.title === '') {
+            return null; 
+        }
+
         const document = await context.db.insert("webpage",
             {
                 url: args.url,
@@ -39,6 +43,23 @@ export const createWebpage = mutation({
     }
 })
 
+
+export const getWebpageById = query({
+    args: { id: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const webpage = await ctx.db
+            .query("webpage")
+            .filter((q) => q.eq(q.field("_id"), args.id))
+            .first();
+
+        return webpage;
+    }
+})
 
 
 export const getWebpagesByIds = query({

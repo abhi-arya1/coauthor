@@ -152,9 +152,11 @@ export const getBookmarks = query({
         .filter((q) => q.eq(q.field("_id"), args.workspaceId))
         .first();
 
-        if (!workspace) { return null; }
-
-        return workspace.bookmarks;
+        if (!workspace || !workspace.bookmarks) { 
+            return null; 
+        }
+     
+        return workspace.bookmarks; 
     }
 })
 

@@ -3,7 +3,7 @@
 
 import { redirect, useParams } from "next/navigation";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   HoverCard,
   HoverCardContent,
@@ -95,6 +95,8 @@ const WorkspacePage = () => {
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
   const workspaceWebpages = useQuery(api.workspace.getWebpagesByWorkspace, { workspaceId: workspaceId.toString() });
   const workspaceWebpageData = useQuery(api.webpage.getWebpagesByIds, { ids: workspaceWebpages || [] });
+  const bookmarks = useQuery(api.workspace.getBookmarks, { workspaceId: workspaceId.toString() });
+  const bookmarkPageData = useQuery(api.webpage.getWebpagesByIds, { ids: bookmarks || [] });
   const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
   const addToChatHistory = useMutation(api.workspace.addToChatHistory);
   const createWebpage = useMutation(api.webpage.createWebpage)
@@ -282,8 +284,8 @@ const WorkspacePage = () => {
                           {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
                         </strong>
                         : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
-                        { workspaceWebpageData?.map((page, index) => (
-                          <WebBox key={index} page={page} workspaceId={workspaceId.toString()} />
+                        { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
+                          <WebBox key={index} pageData={page} workspaceId={workspaceId.toString()} />
                         ))}
                       </div>
                     ))}
@@ -307,76 +309,14 @@ const WorkspacePage = () => {
           <ResizableHandle withHandle />
           
           <ResizablePanel>
+            <span className="font-bold text-xl p-4">Bookmarked Pages</span>
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel>
               <ScrollArea className="p-10 w-full whitespace-nowrap rounded-md overflow-x-auto bg-inherit">
                     <div className="flex flex-row w-max space-x-4 p-4">
-                      <Card className="w-[350px] h-[350px]">
-                          <CardHeader>
-                            <CardTitle>SITE_NAME</CardTitle>
-                            <CardDescription>INFO</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Button>
-                              OPEN LINK
-                            </Button>
-                          </CardFooter>
-                      </Card>
-                      <Card key={0} className="w-[350px]">
-                          <CardHeader>
-                            <CardTitle>SITE_NAME</CardTitle>
-                            <CardDescription>INFO</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Button>
-                              OPEN LINK
-                            </Button>
-                          </CardFooter>
-                      </Card>
-                      <Card key={0} className="w-[350px]">
-                          <CardHeader>
-                            <CardTitle>SITE_NAME</CardTitle>
-                            <CardDescription>INFO</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Button>
-                              OPEN LINK
-                            </Button>
-                          </CardFooter>
-                      </Card>
-                      <Card key={0} className="w-[350px]">
-                          <CardHeader>
-                            <CardTitle>SITE_NAME</CardTitle>
-                            <CardDescription>INFO</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Button>
-                              OPEN LINK
-                            </Button>
-                          </CardFooter>
-                      </Card>
-                      <Card key={0} className="w-[350px]">
-                          <CardHeader>
-                            <CardTitle>SITE_NAME</CardTitle>
-                            <CardDescription>INFO</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Button>
-                              OPEN LINK
-                            </Button>
-                          </CardFooter>
-                      </Card>
-                      <Card key={0} className="w-[350px]">
-                          <CardHeader>
-                            <CardTitle>SITE_NAME</CardTitle>
-                            <CardDescription>INFO</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Button>
-                              OPEN LINK
-                            </Button>
-                          </CardFooter>
-                      </Card>
+                      {bookmarkPageData?.map((page, index) => (
+                        <WebBox key={index} pageData={page} workspaceId={workspaceId.toString()} />
+                      ))}
                     </div>
                     <ScrollBar orientation="horizontal"/>
                   </ScrollArea>

@@ -9,33 +9,37 @@ import { api } from "@/convex/_generated/api";
 import { useEffect, useState } from "react";
 
 interface BoxParams {
-    page: Doc<"webpage">,
+    pageData: Doc<"webpage">
     workspaceId: string 
 }
 
-const WebBox = ({ page, workspaceId }: BoxParams) => {
+const WebBox = ({ pageData, workspaceId }: BoxParams) => {
     const addBookmark = useMutation(api.workspace.addBookmark);
     const removeBookmark = useMutation(api.workspace.removeBookmark);
     const bookmarks = useQuery(api.workspace.getBookmarks, { workspaceId });
-    const [bookmarked, setBookmarked] = useState(false); 
-    
+    const page = pageData
+    const [bookmarked, setBookmarked] = useState(false);
+
+
     useEffect(() => {
         if (bookmarks?.includes(page._id)) {
             setBookmarked(true)
+        } else { 
+            setBookmarked(false); 
         }
     }, [bookmarks, page._id, setBookmarked])
 
     return ( 
-        <Card className="w-[350px] p-2">
+        <Card className="w-[350px] h-[350px] p-2">
         <CardHeader>
-        <CardTitle>{page.title}</CardTitle>
-        <CardDescription className="overflow-hidden">{page.abstract}</CardDescription>
+        <CardTitle><span className="text-wrap">{page.title}</span></CardTitle>
+        <CardDescription className="overflow-hidden"><p className="max-h-[140px] text-wrap">{page.abstract}...</p></CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-between">
             <Button onClick={() => {window.open(page.url)}}>
                 View Site
             </Button>
-            <Button className={`rounded-full p-2 transition-all ${bookmarked ? 'bg-yellow-500' : ''}`} onClick={() => {
+            <Button className={`rounded-full p-2 transition-all dark:hover:bg-yellow-600 hover:bg-yellow-700 ${bookmarked ? 'bg-yellow-500 dark:bg-yellow-500' : ''}`} onClick={() => {
                 if (bookmarked) {
                     setBookmarked(false);
                     removeBookmark({ workspaceId, webpageId: page._id })

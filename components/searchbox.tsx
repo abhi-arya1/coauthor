@@ -68,6 +68,7 @@ export const SearchCommand = ({ workspaceId }: SearchParams) => {
                         title={user.name}
                         onSelect={onSelect}
                         >
+                            { /* eslint-disable-next-line @next/next/no-img-element */ }
                             <img src={user.pfpUrl} alt={user.name} width={30} height={30} className="rounded-full" />
                             <span className="pl-3">
                                 {user.name}

@@ -213,7 +213,7 @@ const WorkspacePage = () => {
                   <HoverCardTrigger>
                     <MenubarRadioItem key={_user.userId} value={_user.userId || 'user_0'} className="items-center">
                       {_user.name} 
-                      {_user._id === workspaceMeta?.creator?._id && <Crown className="h-4 w-4 pl-1 text-orange-500 dark:text-[#FFD700]" />}  
+                      {_user._id === workspaceMeta?.creator?._id && <Crown className="h-6 w-6 pl-2 text-orange-500 dark:text-[#FFD700]" />}  
                       {_user._id !== workspaceMeta?.creator?._id && user?.id == workspaceMeta?.creator?.userId && <CircleMinus className="h-6 w-6 pl-2 hover:text-red-700" onClick={key => {
                           removeFromWorkspace({
                             userId: _user.userId || 'user_0',

@@ -248,10 +248,10 @@ const WorkspacePage = () => {
       </Menubar>
       </div>
 
-      <div className="flex flex-grow pt-12">
+      <div className="pt-12 max-h-screen">
         <ResizablePanelGroup
           direction="horizontal"
-          className="w-full overflow-hidden"
+          className="w-full max-h-svh overflow-hidden"
         >
 
           <ResizablePanel defaultSize={35} minSize={28} maxSize={65}>

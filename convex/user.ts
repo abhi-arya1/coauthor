@@ -121,3 +121,30 @@ export const getByEmail = query({
         return userData;
     }
 })
+
+
+
+export const getAllUsersForSearch = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const users = await ctx.db
+        .query("user")
+        .collect();
+
+        let userData = users.map(user => {
+            return {
+                _id: user._id,
+                userId: user.userId,
+                pfpUrl: user.pfpUrl,
+                email: user.email,
+                name: user.name
+            }
+        })
+        return userData;
+    }
+})

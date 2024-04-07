@@ -5,3 +5,5 @@
 /aws_lambda_artifact/
 *.zip
 .env
+chromedriver 
+headless-chromium

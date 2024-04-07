@@ -35,7 +35,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { useUser } from "@clerk/clerk-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { UserCog, Users } from "lucide-react";
@@ -49,6 +49,7 @@ import { useTheme } from "next-themes";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useSearch } from "@/hooks/use-search";
 
 const WorkspacePage = () => {
   const [ownerName, setOwnerName] = useState('User')
@@ -73,6 +74,10 @@ const WorkspacePage = () => {
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
 
   const router = useRouter(); 
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   return ( 
     <div className="flex flex-col h-screen w-screen">
@@ -104,7 +109,7 @@ const WorkspacePage = () => {
         <MenubarMenu>
           <MenubarTrigger className="hover:bg-gray-100 dark:hover:bg-neutral-800">File</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
+            <MenubarItem onClick = {handlePrint}>
               Save 
             </MenubarItem>
             <MenubarItem>
@@ -180,7 +185,7 @@ const WorkspacePage = () => {
               ))}
             </MenubarRadioGroup>
             <MenubarSeparator />
-            <MenubarItem inset><UserCog className="h-4 w-4" /><span className="pl-2">Edit Users </span></MenubarItem>
+            <MenubarItem inset onClick={useSearch().onOpen}><UserCog className="h-4 w-4" /><span className="pl-2">Edit Users </span></MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
@@ -218,7 +223,7 @@ const WorkspacePage = () => {
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel>
-                <BlockNoteView className="py-5" editor={editor} theme={resolvedTheme === "dark" ? "dark" : "light"}/>
+                <BlockNoteView className="py-5 z-0" editor={editor} theme={resolvedTheme === "dark" ? "dark" : "light"}/>
               </ResizablePanel>
             </ResizablePanelGroup>
           </ResizablePanel>

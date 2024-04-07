@@ -1,10 +1,12 @@
 "use client";
+import { SearchCommand } from "@/components/searchbox";
 import { Spinner } from "@/components/spinner";
 import { useConvexAuth } from "convex/react";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
 export default function SpacesLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const { workspaceId } = useParams();
 
   if (isLoading) {
     return (
@@ -21,6 +23,7 @@ export default function SpacesLayout({ children }: { children: React.ReactNode }
   return (
     <div className="h-full flex dark:bg-[#1F1F1F]">
       <main className="w-full h-full dark:bg-[#1F1F1F]">
+      <SearchCommand workspaceId={workspaceId.toString()} />
         {children}
       </main>
     </div>

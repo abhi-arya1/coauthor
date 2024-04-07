@@ -130,6 +130,55 @@ export const getWorkspacesByCreator = query({
 
 
 
+export const addUserToWorkspace = mutation({
+    args: { workspaceId: v.string(), userId: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        if (!workspace) {
+            throw new Error("Workspace not found");
+        }
+
+        if (workspace.sharedUsers.includes(args.userId)) {
+            return workspace;
+        }
+
+        const user = await ctx.db
+        .query("user")
+        .filter((q) => (q.eq(q.field("userId"), args.userId)))
+        .first();
+
+        if (!user) {
+            console.error('user not found')
+        }
+
+        workspace.sharedUsers.push(args.userId);
+
+        await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: workspace.chatHistory,
+            webpages: workspace.webpages,
+            noteblock: workspace.noteblock,
+            bookmarks: workspace.bookmarks,
+        })
+
+
+        return workspace;
+    }
+})
+
+
+
 export const getUsernamesByWorkspace = query({
     args: { workspaceId: v.string() },
     handler: async (ctx, args) => {

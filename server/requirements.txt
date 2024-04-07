@@ -1,7 +1,0 @@
-fastapi==0.99.1
-mangum==0.17.0
-python-dotenv
-google-generativeai
-requests
-selenium 
-cygrpc

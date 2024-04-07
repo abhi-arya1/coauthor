@@ -274,11 +274,11 @@ const WorkspacePage = () => {
           <ResizablePanel defaultSize={35}>
           <div className="flex flex-col max-h-screen min-w-50">
               <div className="flex-1 overflow-scroll">
-                  <div className="flex flex-col p-6 text-wrap break-words">
+                  <div className="flex flex-col p-6 text-wrap text-ellipsis break-words overflow-hidden">
                     {chatHistory.items.map((item, index) => (
                       <div
                       key={index}
-                      className="bg-white dark:bg-[#484848] p-[10px] mb-[10px] rounded-md"
+                      className="bg-white dark:bg-[#484848] p-6 mb-[10px] rounded-md overflow-hidden"
                       >
                         <strong className="text-black dark:text-white">
                           {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}

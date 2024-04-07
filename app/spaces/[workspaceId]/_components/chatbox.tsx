@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUpSquare, ArrowUpWideNarrow } from 'lucide-react';
+import { ArrowUpSquare } from 'lucide-react';
 
 interface InputWithButtonProps {
   onInputSubmit: (value: string) => void;
@@ -35,7 +35,7 @@ export function InputWithButton({ onInputSubmit, placeholder }: InputWithButtonP
 
 
   return (
-    <div className="flex w-[450px] items-center space-x-2 pt-2">
+    <div className="flex w-[450px] self-center items-center space-x-2 pt-2">
       <Input
         type="text"
         placeholder={pholder}

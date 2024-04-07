@@ -6,7 +6,7 @@ export default defineSchema({
         creator: v.id("user"),
         name: v.string(), 
         sharedUsers: v.array(v.string()),
-        chatHistory: v.array(v.array(v.string())),
+        chatHistory: v.optional(v.any()),
         webpages: v.optional(v.string()),
         noteblock: v.optional(v.string()), 
         bookmarks: v.optional(v.array(v.id("webpage")))

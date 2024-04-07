@@ -38,7 +38,7 @@ import {
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { CircleMinus, Crown, Minus, UserCog, UserPlus, Users } from "lucide-react";
+import { CircleMinus, Crown, Minus, Sparkles, UserCog, UserPlus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/mode_toggle";
 import { InputWithButton } from "./_components/chatbox";
@@ -50,12 +50,24 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSearch } from "@/hooks/use-search";
+import { Spinner } from "@/components/spinner";
+import { sendChatMessage } from "@/lib/utils";
+
+
+const defaultChatHistory: ChatHistory = {
+  items: []
+}
+
 
 const WorkspacePage = () => {
   const [ownerName, setOwnerName] = useState('User')
   const { workspaceId } = useParams();
   const { user } = useUser(); 
   const { resolvedTheme } = useTheme();
+  const [chatHistory, setChatHistory] = useState<ChatHistory>(defaultChatHistory); 
+  const [geminiLoading, setGeminiLoading] = useState(false);
+  const search = useSearch();
+
   const editor = useCreateBlockNote();
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
   if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId && !workspaceMeta?.sharedUsers.includes(user?.id || 'user_0'
@@ -70,11 +82,32 @@ const WorkspacePage = () => {
     }
   }, [workspaceMeta, workspaceMeta?.creator?.name])
 
+  useEffect(() => {
+    setChatHistory(workspaceMeta?.chatHistory || defaultChatHistory)
+  }, [workspaceMeta, workspaceMeta?.chatHistory])
+
 
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
   const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
+  const addToChatHistory = useMutation(api.workspace.addToChatHistory)
 
   const router = useRouter(); 
+
+  const handleChat = async (message: string) => {
+    addToChatHistory({
+      workspaceId: workspaceId.toString(),
+      message: message,
+      role: 'user'
+    })
+    setGeminiLoading(true);
+    const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
+    setGeminiLoading(false);
+    addToChatHistory({
+      workspaceId: workspaceId.toString(),
+      message: response.parts[0],
+      role: 'model'
+    })
+  }
 
   const handlePrint = () => {
     window.print();
@@ -199,7 +232,7 @@ const WorkspacePage = () => {
             { user?.id === workspaceMeta?.creator?.userId && (
             <>
               <MenubarSeparator />
-              <MenubarItem inset onClick={useSearch().onOpen}><UserPlus className="h-4 w-4" /><span className="pl-2">Add Users </span></MenubarItem>
+              <MenubarItem inset onClick={search.onOpen}><UserPlus className="h-4 w-4" /><span className="pl-2">Add Users </span></MenubarItem>
             </>
             )}
           </MenubarContent>
@@ -212,12 +245,27 @@ const WorkspacePage = () => {
           direction="horizontal"
           className="h-full w-full rounded-md"
         >
+
           <ResizablePanel defaultSize={35}>
-            <div className="flex h-full items-end justify-center p-6">
-              <InputWithButton placeholder="Chat with Gemini" onInputSubmit={(input) => {console.log(input)}}/>
+            <div className="flex flex-col max-h-screen overflow-scroll items-end justify-end p-6">
+              <div className="flex flex-col">
+              {chatHistory.items.map((item, index) => (
+                <div key={index} style={{backgroundColor: '#f0f0f0', padding: '10px', marginBottom: '10px', borderRadius: '4px'}}>
+                  <strong>{item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}</strong>: {item.parts[0]}
+                </div>
+              ))}
+              </div>
+              <InputWithButton placeholder="Chat with Gemini" onInputSubmit={(input) => {handleChat(input)}}/>
+              { geminiLoading &&
+                <div className="flex flex-row self-center p-4">
+                  <Spinner /> <Sparkles /> <span>Gemini is Loading...</span>
+                </div>
+              }
             </div>
           </ResizablePanel>
+
           <ResizableHandle withHandle />
+          
           <ResizablePanel>
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel>
@@ -237,10 +285,13 @@ const WorkspacePage = () => {
                   </ScrollArea>
                 </div>
               </ResizablePanel>
+
               <ResizableHandle withHandle />
+              
               <ResizablePanel>
                 <BlockNoteView className="py-5 z-0" editor={editor} theme={resolvedTheme === "dark" ? "dark" : "light"}/>
               </ResizablePanel>
+
             </ResizablePanelGroup>
           </ResizablePanel>
         </ResizablePanelGroup>

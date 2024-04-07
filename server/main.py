@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum 
 from dotenv import load_dotenv
 import os 
@@ -47,38 +48,14 @@ the user will be requesting.
 Thank you for your help, and let's get started. Await my next steps.
 """
 
-chat = model.start_chat(history=[
-    {
-        "role": "user",
-        "parts": [trained_message]
-    },
-    {
-        "role": "model",
-        "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
-    }
-])
 
-
-def add_to_history(history, message, response):
-    history.append({
-            "role": "user",
-            "parts": [message]
-        })
-    history.append(
-        {
-            "role": "model",
-            "parts": [response]
-        })
-    return history
-
-
-def send_message(message) -> tuple[list[dict], str]: 
+def send_message(_chat, message) -> tuple[list[dict], str]: 
     try: 
         message_to_send = f"{message}"
-        response = chat.send_message(message_to_send)
+        response = _chat.send_message(message_to_send)
         new_text = response.text
-    except Exception:
-        new_text = "An error occurred while processing your request, try again."
+    except Exception as e:
+        new_text = f"Error: {e}"
 
     return new_text
 
@@ -136,16 +113,17 @@ def process(link: str, keyword: str):
 app = FastAPI()
 handler = Mangum(app)
 
-class HistoryItem(BaseModel):
-    role: str
-    parts: list
-
-class History(BaseModel): 
-    items: list[HistoryItem]
-
-class ChatMessage(BaseModel): 
+class ChatRequest(BaseModel):
     message: str
-    history: History 
+    history: list
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -155,19 +133,24 @@ async def say_hi():
         "url": f"Serving on ngrok URL: https://seagull-dynamic-bear.ngrok-free.app/"
         }
 
+
 @app.post('/api/chat/{workspace_id}') 
-async def chat(workspace_id, params: ChatMessage):
+async def chat(workspace_id, params: ChatRequest):  
+    _chat = model.start_chat(history=[
+        {
+            "role": "user",
+            "parts": [trained_message]
+        },
+        {
+            "role": "model",
+            "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
+        }
+    ] + params.history)
     message = params.message
-    history = params.history.items 
-    output = send_message(message)
-    new_history_items = [
-        HistoryItem(role="user", parts=[message]), 
-        HistoryItem(role="model", parts=[output])  
-    ]
-    updated_history = history + new_history_items
-    updated_history_dicts = [item.dict() for item in updated_history]
+    output = send_message(_chat, message)
 
     return {
-        "history": updated_history_dicts,
+        "role": "model",
+        "parts": [output], 
         "id": workspace_id
     }

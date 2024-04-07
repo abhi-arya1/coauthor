@@ -5,7 +5,8 @@ import { mutation, query } from "./_generated/server";
 export const createWorkspace = mutation({
     args: {
         creator: v.string(),
-        name: v.string(), 
+        name: v.string(),
+        chatHistory: v.any(), 
     },
     handler: async (context, args) => {
         const identity = await context.auth.getUserIdentity(); 
@@ -32,7 +33,7 @@ export const createWorkspace = mutation({
             creator: creator?._id,
             name: args.name,
             sharedUsers: [],
-            chatHistory: [],
+            chatHistory: args.chatHistory,
             webpages: "",
             noteblock: "",
             bookmarks: []
@@ -73,6 +74,73 @@ export const getWorkspaceById = query({
             noteblock: workspace.noteblock,
             bookmarks: workspace.bookmarks,
         };
+    }
+})
+
+
+export const addToChatHistory = mutation({
+    args: { workspaceId: v.string(), message: v.string(), role: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        if (!workspace) {
+            return null;
+        }
+
+        workspace.chatHistory.items.push({
+            role: args.role, 
+            parts: [args.message],
+        })
+
+        const _workspace = await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: workspace.chatHistory,
+            webpages: workspace.webpages,
+            noteblock: workspace.noteblock,
+            bookmarks: workspace.bookmarks,
+        })
+        return _workspace
+    }
+})
+
+export const updateChatHistory = mutation({
+    args: { workspaceId: v.string(), chatHistory: v.any() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        if (!workspace) {
+            return null;
+        }
+
+        const _workspace = await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: args.chatHistory,
+            webpages: workspace.webpages,
+            noteblock: workspace.noteblock,
+            bookmarks: workspace.bookmarks,
+        })
+
+        return _workspace;
     }
 })
 

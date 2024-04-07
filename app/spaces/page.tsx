@@ -40,10 +40,8 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
 
@@ -70,7 +68,8 @@ export default function SpaceBuilder() {
   const handleCreateWorkspace = (name: string) => {
     createWorkspace({
       creator: user?.id || 'user_0',
-      name: name
+      name: name,
+      chatHistory: { items: [] }, 
     }).then(async (workspace) => {
       await sleep(500);
       router.push(`/spaces/${workspace}`);

@@ -8,6 +8,7 @@ import { useRoom } from "../liveblocks.config";
 import { useUser } from "@clerk/clerk-react";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
+import { useTheme } from "next-themes";
 
 type EditorProps = {
   doc: Y.Doc,
@@ -40,8 +41,14 @@ export function Editor({ workspaceId } : { workspaceId: string }) {
   return <BlockNote doc={doc} provider={provider} workspaceId={workspaceId}  />;
 }
 
+function getRandomPrimaryColorHex() {
+    const primaryColorsHex = ['#FF0000', '#0000FF', '#FFFF00'];
+    const randomIndex = Math.floor(Math.random() * primaryColorsHex.length);
+    return primaryColorsHex[randomIndex];
+  }
 
 function BlockNote({ doc, provider, workspaceId }: EditorProps) {
+  const { resolvedTheme } = useTheme();
   const { user } = useUser(); 
   const updateNoteblock = useMutation(api.workspace.updateNoteblock);
   const editor: BlockNoteEditor = useCreateBlockNote({
@@ -54,12 +61,15 @@ function BlockNote({ doc, provider, workspaceId }: EditorProps) {
       // Information for this user:
       user: {
         name: user?.fullName || "Anonymous",
-        color: "#ff0000",
+        color: getRandomPrimaryColorHex(),
       },
     },
   });
 
-  return <BlockNoteView editor={editor} onChange={() => {
+  return <BlockNoteView 
+    theme={resolvedTheme === "dark" ? "dark" : "light"}
+    editor={editor} 
+    onChange={() => {
     updateNoteblock({
         workspaceId,
         noteblock: JSON.stringify(editor.document, null, 2)

@@ -102,8 +102,7 @@ const WorkspacePage = () => {
   const createWebpage = useMutation(api.webpage.createWebpage)
   const updateNoteblock = useMutation(api.workspace.updateNoteblock);
 
-  const editor = useCreateBlockNote() // { 
-    // initialContent: workspaceMeta?.noteblock ? JSON.parse(workspaceMeta?.noteblock) as PartialBlock[] : undefined });
+  const editor = useCreateBlockNote({ initialContent: workspaceMeta?.noteblock ? JSON.parse(workspaceMeta?.noteblock) as PartialBlock[] : undefined });
 
   const router = useRouter(); 
 

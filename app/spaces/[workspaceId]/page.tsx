@@ -139,7 +139,7 @@ const WorkspacePage = () => {
   };
 
   return ( 
-    <div className="flex flex-col w-screen">
+    <div className="flex flex-col w-screen overscroll-none">
 
       <div className="absolute top-5 left-5">
         <Breadcrumb>
@@ -311,7 +311,7 @@ const WorkspacePage = () => {
           <ResizableHandle withHandle />
           
           <ResizablePanel>
-            <span className="font-bold text-xl p-4 text-[#B8BEDD]">Bookmarked Pages</span>
+            <span className="font-bold text-xl p-4 text:[#1F1F1F] dark:text-[#B8BEDD]">Bookmarked Pages</span>
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel minSize={25}>
               <ScrollArea className="p-10 w-full whitespace-nowrap rounded-md overflow-x-auto bg-inherit">

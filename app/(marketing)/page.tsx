@@ -18,11 +18,19 @@ export default function LandingPage() {
         }
       >
         <Image
-          src={`/coauth_metal.png`}
+          src={`/dashboard_light.png`}
           alt="hero"
           height={100}
           width={700}
-          className="mx-auto rounded-2xl object-cover h-full object-left-top"
+          className="rounded-2xl object-cover h-full w-full dark:hidden"
+          draggable={false}
+        />
+        <Image
+          src={`/dashboard_dark.png`}
+          alt="hero"
+          height={100}
+          width={700}
+          className="rounded-2xl object-cover h-full w-full hidden dark:block"
           draggable={false}
         />
       </ContainerScroll>

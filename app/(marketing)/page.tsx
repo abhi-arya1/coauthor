@@ -26,7 +26,6 @@ export default function LandingPage() {
           draggable={false}
         />
       </ContainerScroll>
-        {/* <StickyScroll content={content} /> */}
     </div>
     
   );

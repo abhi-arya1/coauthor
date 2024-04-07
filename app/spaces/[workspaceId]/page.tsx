@@ -173,7 +173,7 @@ const WorkspacePage = () => {
                 <MenubarRadioItem value="none" className="text-muted-foreground italic">No Shared Users...</MenubarRadioItem>
               )}
               {sharedUserData?.map(user => (
-                <HoverCard>
+                <HoverCard key={0}>
                   <HoverCardTrigger>
                     <MenubarRadioItem key={user.userId} value={user.userId || 'user_0'}>{user.name}</MenubarRadioItem>
                   </HoverCardTrigger>

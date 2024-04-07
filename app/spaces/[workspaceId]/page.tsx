@@ -177,7 +177,7 @@ const WorkspacePage = () => {
                   <HoverCardTrigger>
                     <MenubarRadioItem key={user.userId} value={user.userId || 'user_0'}>{user.name}</MenubarRadioItem>
                   </HoverCardTrigger>
-                  <HoverCardContent sideOffset={5} side="left">
+                  <HoverCardContent sideOffset={6} side="left">
                     <h4 className="text-sm font-semibold">{user?.name}</h4>
                     <p className="text-sm">{user?.userId}</p>
                   </HoverCardContent>

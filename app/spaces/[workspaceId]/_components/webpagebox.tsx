@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 
 interface BoxParams {
-    page: Page, 
+    page: string, 
     workspaceId: string 
 }
 
@@ -11,11 +11,11 @@ const WebBox = ({ page, workspaceId }: BoxParams) => {
     return ( 
         <Card className="w-[350px] p-2">
         <CardHeader>
-        <CardTitle>{page.title}</CardTitle>
-        <CardDescription className="overflow-hidden">{page.abstract}</CardDescription>
+        <CardTitle>TITLE</CardTitle>
+        <CardDescription className="overflow-hidden">ABS</CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-between">
-            <Button onClick={() => {window.open(page.url)}}>
+            <Button onClick={() => {window.open('www.google.com')}}>
                 View Site
             </Button>
             <Button className="rounded-full p-2">

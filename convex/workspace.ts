@@ -42,6 +42,7 @@ export const createWorkspace = mutation({
     }
 })
 
+
 export const getWorkspaceById = query({
     args: { workspaceId: v.string() }, 
     handler: async (ctx, args) => {
@@ -79,6 +80,7 @@ export const getWorkspaceById = query({
 export const addToChatHistory = mutation({
     args: { workspaceId: v.string(), message: v.string(), role: v.string(), pages: v.any() },
     handler: async (ctx, args) => {
+        console.log(args.pages);
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             throw new Error("No Auth");

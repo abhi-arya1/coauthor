@@ -54,6 +54,7 @@ import { Spinner } from "@/components/spinner";
 import { sendChatMessage } from "@/lib/utils";
 import MarkdownContent from "@/components/markdowner";
 import WebBox from "./_components/webpagebox";
+import { Doc, Id } from "@/convex/_generated/dataModel";
 
 
 const defaultChatHistory: ChatHistory = {
@@ -106,19 +107,10 @@ const WorkspacePage = () => {
     setGeminiLoading(true);
     const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
     setGeminiLoading(false);
-    response.pages.map(page => {
-      createWebpage({
-        url: page.url,
-        title: page.title,
-        abstract: page.abstract,
-        authors: page.authors,
-        date: page.date
-      })
-    })
     addToChatHistory({
       workspaceId: workspaceId.toString(),
       message: response.parts[0],
-      pages: response.pages, 
+      pages: response.pages.map(page => page.title), 
       role: 'model'
     })
   }
@@ -273,7 +265,7 @@ const WorkspacePage = () => {
                           {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
                         </strong>
                         : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
-                        { item.pages[0].title !== 'NOPAGE' && item.pages.map((page, index) => (
+                        { item.pages.map((page, index) => (
                           <WebBox key={index} page={page} workspaceId={workspaceId.toString()} />
                         ))}
                       </div>

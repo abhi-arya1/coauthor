@@ -6,7 +6,7 @@ interface ChatHistory {
 interface ChatItem {
     role: string 
     parts: string[]
-    pages: Page[]
+    pages: string[]
 }
 
 interface Page { 

@@ -268,7 +268,7 @@ const WorkspacePage = () => {
       <div className="flex flex-grow pt-12">
         <ResizablePanelGroup
           direction="horizontal"
-          className="h-full w-full rounded-md"
+          className="max-h-screen w-full rounded-md"
         >
 
           <ResizablePanel defaultSize={35} minSize={28} maxSize={65}>
@@ -291,7 +291,7 @@ const WorkspacePage = () => {
                 ))}
                 </div>
               </div>
-              <div className="bg-white dark:bg-[#1F1F1F] p-6 w-full"> {/* Ensure full width */}
+              <div className="bg-white dark:bg-[#1F1F1F] p-6 w-full translate-y-[-48px]"> {/* Ensure full width */}
                 <InputWithButton
                   placeholder="Chat with Gemini"
                   onInputSubmit={(input) => handleChat(input)}

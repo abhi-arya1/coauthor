@@ -55,6 +55,7 @@ import { sendChatMessage } from "@/lib/utils";
 import MarkdownContent from "@/components/markdowner";
 import WebBox from "./_components/webpagebox";
 import { Doc, Id } from "@/convex/_generated/dataModel";
+import { GenericId } from "convex/values";
 
 
 const defaultChatHistory: ChatHistory = {
@@ -107,10 +108,23 @@ const WorkspacePage = () => {
     setGeminiLoading(true);
     const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
     setGeminiLoading(false);
+
+    const pageNames = response.pages.map(page => page.title);
+    
+    response.pages.map(async page => {
+       await createWebpage({
+        url: page.url,
+        title: page.title,
+        abstract: page.abstract,
+        authors: page.authors,
+        date: page.date
+      })
+    })
+
     addToChatHistory({
       workspaceId: workspaceId.toString(),
       message: response.parts[0],
-      pages: response.pages.map(page => page.title), 
+      pages: pageNames,
       role: 'model'
     })
   }
@@ -213,7 +227,7 @@ const WorkspacePage = () => {
                   <HoverCardTrigger>
                     <MenubarRadioItem key={_user.userId} value={_user.userId || 'user_0'} className="items-center">
                       {_user.name} 
-                      {_user._id === workspaceMeta?.creator?._id && <Crown className="h-4 w-4 pl-1 text-orange-500 dark:text-[#FFD700]" />}  
+                      {_user._id === workspaceMeta?.creator?._id && <Crown className="h-6 w-6 pl-2 text-orange-500 dark:text-[#FFD700]" />}  
                       {_user._id !== workspaceMeta?.creator?._id && user?.id == workspaceMeta?.creator?.userId && <CircleMinus className="h-6 w-6 pl-2 hover:text-red-700" onClick={key => {
                           removeFromWorkspace({
                             userId: _user.userId || 'user_0',

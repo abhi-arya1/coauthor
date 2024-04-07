@@ -43,6 +43,23 @@ export const createWorkspace = mutation({
 })
 
 
+export const getWebpagesByWorkspace = query({
+    args: { workspaceId: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+            .query("workspace")
+            .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+            .first();
+
+        
+    }
+})
+
 export const getWorkspaceById = query({
     args: { workspaceId: v.string() }, 
     handler: async (ctx, args) => {

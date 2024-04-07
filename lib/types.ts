@@ -21,5 +21,6 @@ interface ChatResponse {
     role: string 
     parts: string[]
     pages: Page[]
+    furtherData: any
     id: string 
 }

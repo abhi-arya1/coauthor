@@ -66,7 +66,7 @@ export const SearchCommand = ({ workspaceId }: SearchParams) => {
                         key={user.name}
                         value={`${user.userId}-${user.name}`}
                         title={user.name}
-                        onSelect={onSelect}
+                        onSelect={onSelect}             
                         >
                             { /* eslint-disable-next-line @next/next/no-img-element */ }
                             <img src={user.pfpUrl} alt={user.name} width={30} height={30} className="rounded-full" />

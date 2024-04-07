@@ -57,7 +57,7 @@ export const getWebpagesByWorkspace = query({
             .first();
 
         if (!workspace) { return null; }
-        const chatPages = workspace?.chatHistory?.items.flatMap((item: any) => item.pages) || []; 
+        const chatPages = workspace?.chatHistory?.items.map((item: any) => item.pages) || []; 
 
         const webpages = await ctx.db
         .query("webpage")

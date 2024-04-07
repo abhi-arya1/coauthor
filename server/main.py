@@ -16,6 +16,57 @@ dotenv_path = os.path.join(parent_dir, '.env.local')
 load_dotenv(dotenv_path) 
 
 #################################################################################################
+# FIREWORKS   ###################################################################################
+#################################################################################################
+
+
+FIREWORKS_API_KEY = getenv('FIREWORKS_KEY')
+
+def process(link: str, keyword: str):
+    driver = webdriver.Chrome()
+    print(link)
+    driver.get(link)
+    page_source = driver.page_source
+
+    url = "https://api.fireworks.ai/inference/v1/chat/completions"
+    payload = {
+        "model": "accounts/fireworks/models/yi-34b-200k-capybara",
+        "messages": [
+            {
+                "role": "user",
+                "content": (f"""
+                    {page_source}
+
+                    Please return a json of the format
+                    {{
+                        "summary": "summary"
+                    }}
+                    where summary is a one sentence summary of the webpage that you are provided. 
+                    If you cannot open the page, just write "Cannot open page" in the Summary. 
+                    Please provide information strictly on {keyword}, which is what the user requested.
+                    """),  
+            }
+        ],
+        "max_tokens": 8192,
+        "top_p": 1,
+        "top_k": 40,
+        "presence_penalty": 0,
+        "frequency_penalty": 0,
+        "temperature": 0.1, 
+        }
+    headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {FIREWORKS_API_KEY}"
+    }
+    driver.quit()
+
+    response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+    print(response.text)
+    response_data = json.loads(response.text)
+    return response_data["choices"][0]["message"]["content"]
+
+#################################################################################################
 # GEMINI CHAT ###################################################################################
 #################################################################################################
 
@@ -38,7 +89,7 @@ Once you find these articles, there's an example output that I want you to gener
 Once you have found the webpages, you can provide any information you want BEFORE this next step. 
 Once you are ready to prompt the URLs, you will do so by first typing: "*7893URLS*:" by itself on a line, without quotations.
 After that, you will generate any number of URLs about the topic you have found (3-5 default, but base this on the user's request), and provide them as:
-"- Title: "title"- Abstract: "abstract" - Author: "author" - Date: "date ([Day Number] [Month in Words] [Year Number] Format)" - URL: "url"
+"- Title: "title"- Abstract: "abstract" - Author: "author" - Date: "date ([Day Number] [Month in Words] [Year Number] Format)" - URL: "url" - Citation: "citation""
 You will provide this information for each URL you find, and you will provide the information in this format, without any changes, and each bullet on a NEW LINE.
 For the next page, you would put *7894URLS*: and so on, but you will never generate more than 5 pages.
 So for example, if you had 3 pages, before "\n- Title", you MUST put "*7893URLS*:", then the page data, then "*7894URLS*:", then the next page data, and so on.
@@ -74,6 +125,7 @@ def send_message(_chat, message) -> tuple[list[dict], str]:
         url = ""
         date = ""
         abstract = ""
+        citation = ""
         for line in lines:
             if line.startswith('- Title:'):
                 title = line.replace('- Title:', '').strip()
@@ -85,12 +137,21 @@ def send_message(_chat, message) -> tuple[list[dict], str]:
                 url = line.replace('- URL:', '').strip()
             elif line.startswith('- Abstract:'):
                 abstract = line.replace('- Abstract:', '').strip()
+            elif line.startswith('- Citation:'):
+                citation = line.replace('- Citation:', '').strip()
+
+        print(f"URL::::{url}")
+
+        # furtherData = process(url, message)
+        # summary = furtherData["summary"]
         return {
             "title": title, 
             "authors": authors, 
             "url": url, 
             "date": date,
-            "abstract": abstract
+            "abstract": abstract,
+            "citation": citation,
+            #"summary": summary
         }
     
     sections = split_sections(new_text)
@@ -101,54 +162,7 @@ def send_message(_chat, message) -> tuple[list[dict], str]:
     else: 
         new_text = sections[0]
 
-    return new_text, pages if pages else [{'title': 'NOPAGES'}]
-
-
-#################################################################################################
-# FIREWORKS   ###################################################################################
-#################################################################################################
-
-
-FIREWORKS_API_KEY = getenv('FIREWORKS_KEY')
-
-def process(link: str, keyword: str):
-    driver = webdriver.Chrome()
-    driver.get(link)
-    page_source = driver.page_source
-
-    url = "https://api.fireworks.ai/inference/v1/chat/completions"
-    payload = {
-        "model": "accounts/fireworks/models/yi-34b-200k-capybara",
-        "messages": [
-            {
-                "role": "user",
-                "content": (f"""
-                    {page_source}
-
-                    Please parse out all references and instances of the topic of {keyword} from this raw HTML page.
-                    Please provide markdown/raw text output and draw your own conclusions from that HTML.   
-                    Please provide information strictly on {keyword} in your own raw text output                          
-                    """),  
-            }
-        ],
-        "max_tokens": 8192,
-        "top_p": 1,
-        "top_k": 40,
-        "presence_penalty": 0,
-        "frequency_penalty": 0,
-        "temperature": 0.1, 
-        }
-    headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {FIREWORKS_API_KEY}"
-    }
-    driver.quit()
-
-    response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-    print(response.text)
-    response_data = json.loads(response.text)
-    return response_data["choices"][0]["message"]["content"]
+    return new_text, pages if pages else ['NOPAGES']
 
 
 #################################################################################################
@@ -197,7 +211,7 @@ async def chat(workspace_id, params: ChatRequest):
         },
         {
             "role": "model",
-            "parts": ["Sure, here is an article:\n*7893URLS*:\n- Title: Deep Learning and Artificial Neural Networks for Spacecraft Dynamics, Navigation and Control\n- Abstract: The growing interest in Artificial Intelligence is pervading several domains of technology and robotics research. Only recently has the space community started to investigate deep learning methods and artificial neural networks for space systems. This paper aims at introducing the most relevant characteristics of these topics for spacecraft dynamics control, guidance and navigation. The most common artificial neural network architectures and the associated training methods are examined, trying to highlight the advantages and disadvantages of their employment for specific problems. In particular, the applications of artificial neural networks to system identification, control synthesis and optical navigation are reviewed and compared using quantitative and qualitative metrics. This overview presents the end-to-end deep learning frameworks for spacecraft guidance, navigation and control together with the hybrid methods in which the neural techniques are coupled with traditional algorithms to enhance their performance levels.\n- Author: Stefano Silvestrini, Michele Lavagna\n- Date: 31 August 2022\n- URL: https://www.mdpi.com/2504-446X/6/10/270\n*7894URLS*:\n(NEXT PAGE HERE)"]
+            "parts": ["Sure, here is an article:\n*7893URLS*:\n- Title: Deep Learning and Artificial Neural Networks for Spacecraft Dynamics, Navigation and Control\n- Abstract: The growing interest in Artificial Intelligence is pervading several domains of technology and robotics research. Only recently has the space community started to investigate deep learning methods and artificial neural networks for space systems. This paper aims at introducing the most relevant characteristics of these topics for spacecraft dynamics control, guidance and navigation. The most common artificial neural network architectures and the associated training methods are examined, trying to highlight the advantages and disadvantages of their employment for specific problems. In particular, the applications of artificial neural networks to system identification, control synthesis and optical navigation are reviewed and compared using quantitative and qualitative metrics. This overview presents the end-to-end deep learning frameworks for spacecraft guidance, navigation and control together with the hybrid methods in which the neural techniques are coupled with traditional algorithms to enhance their performance levels.\n- Author: Stefano Silvestrini, Michele Lavagna\n- Date: 31 August 2022\n- URL: https://www.mdpi.com/2504-446X/6/10/270\n- Citation Silvestrini S, Lavagna M. Deep Learning and Artificial Neural Networks for Spacecraft Dynamics, Navigation and Control. Drones. 2022; 6(10):270. https://doi.org/10.3390/drones6100270\n*7894URLS*:\n(NEXT PAGE HERE)"]
         }
     ] + params.history)
     message = params.message

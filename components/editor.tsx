@@ -56,7 +56,7 @@ function BlockNote({ doc, provider, workspaceId }: EditorProps) {
       provider,
 
       // Where to store BlockNote data in the Y.Doc:
-      fragment: doc.getXmlFragment("document-store"),
+      fragment: doc.getXmlFragment(`document-store-${workspaceId}`),
 
       // Information for this user:
       user: {

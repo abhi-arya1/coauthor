@@ -11,9 +11,10 @@ import { useEffect, useState } from "react";
 interface BoxParams {
     pageData: Doc<"webpage">
     workspaceId: string 
+    isInChatbox: boolean
 }
 
-const WebBox = ({ pageData, workspaceId }: BoxParams) => {
+const WebBox = ({ pageData, workspaceId, isInChatbox }: BoxParams) => {
     const addBookmark = useMutation(api.workspace.addBookmark);
     const removeBookmark = useMutation(api.workspace.removeBookmark);
     const bookmarks = useQuery(api.workspace.getBookmarks, { workspaceId });
@@ -30,11 +31,11 @@ const WebBox = ({ pageData, workspaceId }: BoxParams) => {
     }, [bookmarks, page._id, setBookmarked])
 
     return ( 
-        <div className="pt-4">
+        <div className="pt-4 transition-all">
         <Card className="max-w-[350px] max-h-[350px] p-2 shadow-2xl">
         <CardHeader>
         <CardTitle><span className="text-wrap dark:text-[#B8BEDD] text-[#1F1F1F]">{page.title}</span></CardTitle>
-        <CardDescription className="overflow-hidden text-ellipsis"><p className="text-wrap text-ellipsis max-h-[140px]">{page.abstract}...</p></CardDescription>
+        <CardDescription className="overflow-hidden text-ellipsis"><p className="text-wrap text-ellipsis max-h-[140px]">{!isInChatbox && (page.abstract)}...</p></CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-between">
             <Button onClick={() => {window.open(page.url)}}>

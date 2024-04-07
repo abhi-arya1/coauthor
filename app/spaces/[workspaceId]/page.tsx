@@ -69,7 +69,6 @@ const WorkspacePage = () => {
   const [ownerName, setOwnerName] = useState('User')
   const { workspaceId } = useParams();
   const { user } = useUser(); 
-  const { resolvedTheme } = useTheme();
   const [ chatHistory, setChatHistory ] = useState<ChatHistory>(defaultChatHistory); 
   const [ geminiLoading, setGeminiLoading ] = useState(false);
   const search = useSearch();
@@ -139,7 +138,7 @@ const WorkspacePage = () => {
   };
 
   return ( 
-    <div className="flex flex-col w-screen overscroll-none">
+    <div className="flex flex-col h-screen w-screen">
 
       <div className="absolute top-5 left-5">
         <Breadcrumb>
@@ -272,7 +271,7 @@ const WorkspacePage = () => {
         >
 
           <ResizablePanel defaultSize={35} minSize={28} maxSize={65}>
-            <div className="flex flex-col max-h-screen items-center justify-center min-w-[50%]">
+            <div className="flex flex-col max-h-screen justify-between min-w-[50%]">
               <div className="flex-1 overflow-auto">
                 <div className="flex flex-col p-6 text-wrap text-ellipsis break-words overflow-hidden">
                 {chatHistory.items.map((item, index) => (
@@ -285,7 +284,7 @@ const WorkspacePage = () => {
                     </strong>
                     : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
                     { item.role === 'model' && workspaceWebpageData?.map((page, index) => (
-                      <WebBox key={index} pageData={page} workspaceId={workspaceId.toString()} />
+                      <WebBox isInChatbox={true} key={index} pageData={page} workspaceId={workspaceId.toString()} />
                     ))}
                   </div>
                 ))}
@@ -315,10 +314,15 @@ const WorkspacePage = () => {
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel minSize={25}>
               <ScrollArea className="p-10 w-full whitespace-nowrap rounded-md overflow-x-auto bg-inherit">
-                    <div className="flex flex-row w-max space-x-4 p-4">
+                    <div className="flex flex-row transition-all w-max space-x-4 p-4">
                       {bookmarkPageData?.map((page, index) => (
-                        <WebBox key={index} pageData={page} workspaceId={workspaceId.toString()} />
-                      ))}
+                        <WebBox isInChatbox={false} key={index} pageData={page} workspaceId={workspaceId.toString()} />
+                      ))} 
+                      {bookmarkPageData?.length === 0 && (
+                        <div className="flex items-center justify-center">
+                         <span className="text-muted-foreground italic">No Bookmarks Yet...</span>
+                        </div>
+                        )}
                     </div>
                     <ScrollBar orientation="horizontal"/>
                   </ScrollArea>

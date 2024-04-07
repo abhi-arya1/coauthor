@@ -260,6 +260,7 @@ export const updateChatHistory = mutation({
     }
 })
 
+
 export const getWorkspacesByCreator = query({
     args: { userId: v.string() },
     handler: async (ctx, args) => {

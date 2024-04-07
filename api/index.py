@@ -1,13 +1,16 @@
 from fastapi import FastAPI
-from mangum import Mangum 
 from dotenv import load_dotenv
+import os 
 from os import getenv
 from pydantic import BaseModel 
 from selenium import webdriver
 import google.generativeai as genai 
 import requests, json
 
-load_dotenv() 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+dotenv_path = os.path.join(parent_dir, '.env.local')
+load_dotenv(dotenv_path) 
 
 #################################################################################################
 # GEMINI CHAT ###################################################################################
@@ -15,8 +18,8 @@ load_dotenv()
 
 GEMINI_API_KEY = getenv('GEMINI_KEY')
 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-pro')
+# genai.configure(api_key=GEMINI_API_KEY)
+# model = genai.GenerativeModel('gemini-pro')
 
 trained_message = """
 Hello, you are an AI model trained specifically to interact with research papers and articles for our application 
@@ -43,16 +46,16 @@ the user will be requesting.
 Thank you for your help, and let's get started. Await my next steps.
 """
 
-chat = model.start_chat(history=[
-    {
-        "role": "user",
-        "parts": [trained_message]
-    },
-    {
-        "role": "model",
-        "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
-    }
-])
+# chat = model.start_chat(history=[
+#     {
+#         "role": "user",
+#         "parts": [trained_message]
+#     },
+#     {
+#         "role": "model",
+#         "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
+#     }
+# ])
 
 
 def add_to_history(history, message, response):
@@ -86,9 +89,8 @@ def send_message(message) -> tuple[list[dict], str]:
 
 FIREWORKS_API_KEY = getenv('FIREWORKS_KEY')
 
-driver = webdriver.Chrome()
-
 def process(link: str, keyword: str):
+    driver = webdriver.Chrome()
     driver.get(link)
     page_source = driver.page_source
 
@@ -131,7 +133,6 @@ def process(link: str, keyword: str):
 #################################################################################################
 
 app = FastAPI()
-handler = Mangum(app)
 
 class HistoryItem(BaseModel):
     role: str
@@ -145,14 +146,14 @@ class ChatMessage(BaseModel):
     history: History 
 
 
-@app.get("/")
+@app.get("/api/hi")
 async def say_hi():
     return {
         "message": "Hello from CoAuthor API!",
         "url": f"Serving on AWS URL: {getenv('AWS_URL')}"
         }
 
-@app.post('/chat/{workspace_id}') 
+@app.post('/api/chat/{workspace_id}') 
 async def chat(workspace_id, params: ChatMessage):
     message = params.message
     history = params.history.items 

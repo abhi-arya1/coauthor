@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "convex/react";
-import { useUser } from "@clerk/clerk-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { api } from "@/convex/_generated/api";
 import { ModeToggle } from "@/components/mode_toggle";
 import { Boxes } from "@/components/ui/background-boxes";
@@ -55,7 +55,6 @@ export default function SpaceBuilder() {
   const { user } = useUser(); 
   const router = useRouter(); 
   const workspaces = useQuery(api.workspace.getWorkspacesByCreator, { userId: user?.id || 'user_0' });
-  console.log(workspaces)
   createUser({ 
     userId: user?.id || 'user_0',
     name: user?.fullName || 'User',
@@ -87,7 +86,7 @@ export default function SpaceBuilder() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="/spaces">{user?.firstName}&apos;s Spaces</BreadcrumbLink>
+          <BreadcrumbLink href="/spaces">{user?.fullName}&apos;s Spaces</BreadcrumbLink>
         </BreadcrumbItem>
       </BreadcrumbList>
       </Breadcrumb>
@@ -96,7 +95,8 @@ export default function SpaceBuilder() {
         <ModeToggle />
       </div>
       <div className="flex flex-row items-center justify-center z-[21]">
-        <span className="font-bold text-3xl">Welcome, {user?.fullName || "User"} </span>
+        <UserButton />
+        <span className="font-bold text-3xl pl-3">Welcome, {user?.fullName || "User"} </span>
       </div>
       <div className="flex flex-col">
         <div className="z-[21] flex flex-row items-center justify-center">
@@ -114,11 +114,11 @@ export default function SpaceBuilder() {
                   {workspaces?.map((space) => (
                     <Card key={0} className="w-[350px]">
                       <CardHeader>
-                        <CardTitle>{space.name}</CardTitle>
-                        <CardDescription>{space.allNames}</CardDescription>
+                        <CardTitle>{space?.name}</CardTitle>
+                        <CardDescription>{space?.allNames}</CardDescription>
                       </CardHeader>
                       <CardFooter className="flex justify-between">
-                        <Button onClick={() => router.push(`/spaces/${space._id}`)}>
+                        <Button onClick={() => router.push(`/spaces/${space?._id}`)}>
                           Open
                         </Button>
                       </CardFooter>

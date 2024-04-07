@@ -38,3 +38,23 @@ export const createWebpage = mutation({
         return document;
     }
 })
+
+
+
+export const getWebpagesByIds = query({
+    args: { ids: v.array(v.id("webpage")) },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const webpages = await ctx.db
+            .query("webpage")
+            .collect();
+
+        const _webpages = webpages.filter(webpage => args.ids.includes(webpage._id));
+
+        return _webpages;
+    }
+})

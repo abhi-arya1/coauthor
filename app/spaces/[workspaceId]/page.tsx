@@ -56,6 +56,7 @@ import MarkdownContent from "@/components/markdowner";
 import WebBox from "./_components/webpagebox";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 import { GenericId } from "convex/values";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 
 const defaultChatHistory: ChatHistory = {
@@ -92,6 +93,8 @@ const WorkspacePage = () => {
 
 
   const sharedUserData = useQuery(api.workspace.getUsernamesByWorkspace, { workspaceId: workspaceId.toString() });
+  const workspaceWebpages = useQuery(api.workspace.getWebpagesByWorkspace, { workspaceId: workspaceId.toString() });
+  const workspaceWebpageData = useQuery(api.webpage.getWebpagesByIds, { ids: workspaceWebpages || [] });
   const removeFromWorkspace = useMutation(api.workspace.removeUserFromWorkspace);
   const addToChatHistory = useMutation(api.workspace.addToChatHistory);
   const createWebpage = useMutation(api.webpage.createWebpage)
@@ -103,7 +106,7 @@ const WorkspacePage = () => {
       workspaceId: workspaceId.toString(),
       message: message,
       role: 'user',
-      pages: [{'title': 'NOPAGE'}]
+      pages: ['NOPAGE']
     })
     setGeminiLoading(true);
     const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
@@ -279,7 +282,7 @@ const WorkspacePage = () => {
                           {item.role === 'user' ? workspaceMeta?.name : 'Coauthor'}
                         </strong>
                         : <MarkdownContent markdown={item.parts[0]}></MarkdownContent>
-                        { item.pages.map((page, index) => (
+                        { workspaceWebpageData?.map((page, index) => (
                           <WebBox key={index} page={page} workspaceId={workspaceId.toString()} />
                         ))}
                       </div>
@@ -306,21 +309,77 @@ const WorkspacePage = () => {
           <ResizablePanel>
             <ResizablePanelGroup direction="vertical" className="h-full w-full">
               <ResizablePanel>
-                <div className="flex h-full w-full items-center justify-center p-6">
-                  <ScrollArea>
-                    <Card key={0} className="w-[350px]">
-                        <CardHeader>
-                          <CardTitle>SITE_NAME</CardTitle>
-                          <CardDescription>INFO</CardDescription>
-                        </CardHeader>
-                        <CardFooter className="flex justify-between">
-                          <Button>
-                            OPEN LINK
-                          </Button>
-                        </CardFooter>
-                    </Card>
+              <ScrollArea className="p-10 w-full whitespace-nowrap rounded-md overflow-x-auto bg-inherit">
+                    <div className="flex flex-row w-max space-x-4 p-4">
+                      <Card className="w-[350px] h-[350px]">
+                          <CardHeader>
+                            <CardTitle>SITE_NAME</CardTitle>
+                            <CardDescription>INFO</CardDescription>
+                          </CardHeader>
+                          <CardFooter className="flex justify-between">
+                            <Button>
+                              OPEN LINK
+                            </Button>
+                          </CardFooter>
+                      </Card>
+                      <Card key={0} className="w-[350px]">
+                          <CardHeader>
+                            <CardTitle>SITE_NAME</CardTitle>
+                            <CardDescription>INFO</CardDescription>
+                          </CardHeader>
+                          <CardFooter className="flex justify-between">
+                            <Button>
+                              OPEN LINK
+                            </Button>
+                          </CardFooter>
+                      </Card>
+                      <Card key={0} className="w-[350px]">
+                          <CardHeader>
+                            <CardTitle>SITE_NAME</CardTitle>
+                            <CardDescription>INFO</CardDescription>
+                          </CardHeader>
+                          <CardFooter className="flex justify-between">
+                            <Button>
+                              OPEN LINK
+                            </Button>
+                          </CardFooter>
+                      </Card>
+                      <Card key={0} className="w-[350px]">
+                          <CardHeader>
+                            <CardTitle>SITE_NAME</CardTitle>
+                            <CardDescription>INFO</CardDescription>
+                          </CardHeader>
+                          <CardFooter className="flex justify-between">
+                            <Button>
+                              OPEN LINK
+                            </Button>
+                          </CardFooter>
+                      </Card>
+                      <Card key={0} className="w-[350px]">
+                          <CardHeader>
+                            <CardTitle>SITE_NAME</CardTitle>
+                            <CardDescription>INFO</CardDescription>
+                          </CardHeader>
+                          <CardFooter className="flex justify-between">
+                            <Button>
+                              OPEN LINK
+                            </Button>
+                          </CardFooter>
+                      </Card>
+                      <Card key={0} className="w-[350px]">
+                          <CardHeader>
+                            <CardTitle>SITE_NAME</CardTitle>
+                            <CardDescription>INFO</CardDescription>
+                          </CardHeader>
+                          <CardFooter className="flex justify-between">
+                            <Button>
+                              OPEN LINK
+                            </Button>
+                          </CardFooter>
+                      </Card>
+                    </div>
+                    <ScrollBar orientation="horizontal"/>
                   </ScrollArea>
-                </div>
               </ResizablePanel>
 
               <ResizableHandle withHandle />

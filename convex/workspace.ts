@@ -56,7 +56,105 @@ export const getWebpagesByWorkspace = query({
             .filter((q) => q.eq(q.field("_id"), args.workspaceId))
             .first();
 
+        if (!workspace) { return null; }
+        const chatPages = workspace?.chatHistory?.items.flatMap((item: any) => item.pages) || []; 
+
+        const webpages = await ctx.db
+        .query("webpage")
+        .collect();
         
+        const match = webpages.filter(webpage => chatPages.includes(webpage.title));
+        const webpageIds = match.map(webpage => webpage._id);
+        return webpageIds;
+    }
+})
+
+
+export const addBookmark = mutation({
+    args: { workspaceId: v.string(), webpageId: v.id("webpage") },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity(); 
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+        .query("workspace")
+        .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+        .first();
+
+        if (!workspace) { return null; }
+
+        if (workspace?.bookmarks?.includes(args.webpageId)) {
+            return workspace;
+        }
+
+        workspace?.bookmarks?.push(args.webpageId);
+
+        const _workspace = await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: workspace.chatHistory,
+            noteblock: workspace.noteblock,
+            bookmarks: workspace.bookmarks,
+        });
+
+        return _workspace;
+    }
+})
+
+
+export const removeBookmark = mutation({
+    args: { workspaceId: v.string(), webpageId: v.id("webpage") },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity(); 
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+        .query("workspace")
+        .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+        .first();
+
+        if (!workspace) { return null; }
+
+        if (workspace?.bookmarks?.includes(args.webpageId)) {
+            workspace.bookmarks = workspace.bookmarks.filter((bookmark) => bookmark !== args.webpageId);
+        } else { 
+            return workspace; 
+        }
+
+        const _workspace = await ctx.db.patch(workspace._id, {
+            creator: workspace.creator,
+            name: workspace.name,
+            sharedUsers: workspace.sharedUsers,
+            chatHistory: workspace.chatHistory,
+            noteblock: workspace.noteblock,
+            bookmarks: workspace.bookmarks,
+        });
+
+        return _workspace;
+    }
+})
+
+export const getBookmarks = query({
+    args: { workspaceId: v.string() },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity(); 
+        if (!identity) {
+            throw new Error("No Auth");
+        }
+
+        const workspace = await ctx.db
+        .query("workspace")
+        .filter((q) => q.eq(q.field("_id"), args.workspaceId))
+        .first();
+
+        if (!workspace) { return null; }
+
+        return workspace.bookmarks;
     }
 })
 

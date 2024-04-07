@@ -54,8 +54,8 @@ import { Spinner } from "@/components/spinner";
 import { sendChatMessage } from "@/lib/utils";
 import MarkdownContent from "@/components/markdowner";
 import WebBox from "./_components/webpagebox";
-import { Doc, Id } from "@/convex/_generated/dataModel";
-import { GenericId } from "convex/values";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
 import { ScrollBar } from "@/components/ui/scroll-area";
 import { PartialBlock } from "@blocknote/core";
 
@@ -73,6 +73,9 @@ const WorkspacePage = () => {
   const [ chatHistory, setChatHistory ] = useState<ChatHistory>(defaultChatHistory); 
   const [ geminiLoading, setGeminiLoading ] = useState(false);
   const search = useSearch();
+
+  const doc = new Y.Doc();
+  const provider = new WebrtcProvider(workspaceId.toString(), doc)
 
   const workspaceMeta = useQuery(api.workspace.getWorkspaceById, { workspaceId: workspaceId.toString() });
   if (workspaceMeta && user?.id !== workspaceMeta?.creator?.userId && !workspaceMeta?.sharedUsers.includes(user?.id || 'user_0'
@@ -102,7 +105,16 @@ const WorkspacePage = () => {
   const createWebpage = useMutation(api.webpage.createWebpage)
   const updateNoteblock = useMutation(api.workspace.updateNoteblock);
 
-  const editor = useCreateBlockNote({ initialContent: workspaceMeta?.noteblock ? JSON.parse(workspaceMeta?.noteblock) as PartialBlock[] : undefined });
+  const editor = useCreateBlockNote({
+    collaboration: {
+      provider,
+      fragment: doc.getXmlFragment("document-store"),
+      user: {
+        name: user?.fullName || "Anonymous",
+        color: "#ff0000",
+      },
+    },
+  });
 
   const router = useRouter(); 
 

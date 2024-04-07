@@ -196,8 +196,12 @@ const WorkspacePage = () => {
                 </HoverCard>
               ))}
             </MenubarRadioGroup>
-            <MenubarSeparator />
-            <MenubarItem inset onClick={useSearch().onOpen}><UserPlus className="h-4 w-4" /><span className="pl-2">Add Users </span></MenubarItem>
+            { user?.id === workspaceMeta?.creator?.userId && (
+            <>
+              <MenubarSeparator />
+              <MenubarItem inset onClick={useSearch().onOpen}><UserPlus className="h-4 w-4" /><span className="pl-2">Add Users </span></MenubarItem>
+            </>
+            )}
           </MenubarContent>
         </MenubarMenu>
       </Menubar>

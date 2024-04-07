@@ -1,0 +1,7 @@
+fastapi 
+mangum 
+python-dotenv
+selenium
+google-generativeai
+requests
+uvicorn

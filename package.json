@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "fastapi-dev": "pip3 install -r requirements.txt && python3 -m uvicorn api.index:app --reload",
-    "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "next-dev": "next dev"
+    "lint": "next lint"
   },
   "dependencies": {
     "@blocknote/core": "^0.12.4",
@@ -44,7 +42,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@types/node": "<=18",
+    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-grid-layout": "^1.3.5",

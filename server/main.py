@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from mangum import Mangum 
 from dotenv import load_dotenv
 import os 
 from os import getenv
@@ -18,8 +19,8 @@ load_dotenv(dotenv_path)
 
 GEMINI_API_KEY = getenv('GEMINI_KEY')
 
-# genai.configure(api_key=GEMINI_API_KEY)
-# model = genai.GenerativeModel('gemini-pro')
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-pro')
 
 trained_message = """
 Hello, you are an AI model trained specifically to interact with research papers and articles for our application 
@@ -46,16 +47,16 @@ the user will be requesting.
 Thank you for your help, and let's get started. Await my next steps.
 """
 
-# chat = model.start_chat(history=[
-#     {
-#         "role": "user",
-#         "parts": [trained_message]
-#     },
-#     {
-#         "role": "model",
-#         "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
-#     }
-# ])
+chat = model.start_chat(history=[
+    {
+        "role": "user",
+        "parts": [trained_message]
+    },
+    {
+        "role": "model",
+        "parts": ["Hi, I'm Coauthor AI. I'm here to help you with your research. What would you like to know about today?"]
+    }
+])
 
 
 def add_to_history(history, message, response):
@@ -133,6 +134,7 @@ def process(link: str, keyword: str):
 #################################################################################################
 
 app = FastAPI()
+handler = Mangum(app)
 
 class HistoryItem(BaseModel):
     role: str
@@ -146,7 +148,7 @@ class ChatMessage(BaseModel):
     history: History 
 
 
-@app.get("/api/hi")
+@app.get("/")
 async def say_hi():
     return {
         "message": "Hello from CoAuthor API!",
@@ -166,5 +168,6 @@ async def chat(workspace_id, params: ChatMessage):
     updated_history_dicts = [item.dict() for item in updated_history]
 
     return {
-        "history": updated_history_dicts
+        "history": updated_history_dicts,
+        "id": workspace_id
     }

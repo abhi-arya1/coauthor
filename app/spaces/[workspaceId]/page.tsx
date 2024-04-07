@@ -112,6 +112,7 @@ const WorkspacePage = () => {
 
     setGeminiLoading(true);
     const response = await sendChatMessage(workspaceId.toString(), message, workspaceMeta?.chatHistory.items)
+    console.log(response.pages);
     setGeminiLoading(false);
 
     const pageNames = response.pages.map(page => page.title);
@@ -122,7 +123,9 @@ const WorkspacePage = () => {
         title: page.title,
         abstract: page.abstract,
         authors: page.authors,
-        date: page.date
+        date: page.date,
+        citation: page.citation,
+        summary: page.summary || page.abstract.substring(0, 100)
       })
     })
 
@@ -299,9 +302,10 @@ const WorkspacePage = () => {
                   onInputSubmit={(input) => handleChat(input)}
                 />
                 {geminiLoading && (
-                            <div className="flex flex-row self-center p-4">
-                              <Sparkles />
-                              <span className="pl-4">Gemini is Loading...</span>
+                            <div className="flex flex-row self-center items-center gap-x-2 p-4">
+                              <Sparkles className="h-4 w-4 text-muted-foreground"/>
+                              <Spinner size="default" />
+                              <span className="text-muted-foreground">Gemini is Loading...</span>
                             </div>
                           )}
               </div>

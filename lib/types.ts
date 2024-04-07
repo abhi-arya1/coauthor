@@ -15,7 +15,8 @@ interface Page {
     url: string, 
     date: string,
     abstract: string,
-    
+    citation: string,
+    summary?: string, 
 }
 
 interface ChatResponse { 

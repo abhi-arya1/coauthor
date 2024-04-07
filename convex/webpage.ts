@@ -9,6 +9,8 @@ export const createWebpage = mutation({
         abstract: v.string(),
         authors: v.string(),
         date: v.string(),
+        citation: v.string(),
+        summary: v.string(),
     },
     handler: async (context, args) => {
         const identity = await context.auth.getUserIdentity();
@@ -36,7 +38,9 @@ export const createWebpage = mutation({
                 title: args.title,
                 abstract: args.abstract,
                 authors: args.authors,
-                date: args.date
+                date: args.date,
+                citation: args.citation,
+                summary: args.summary.trim(),
             });
 
         return document;

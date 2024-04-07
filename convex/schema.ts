@@ -17,6 +17,8 @@ export default defineSchema({
         abstract: v.string(),
         authors: v.string(),
         date: v.string(), 
+        citation: v.optional(v.string()),
+        summary: v.optional(v.string())
     })
     .index("byUrl", ["url"]),
 

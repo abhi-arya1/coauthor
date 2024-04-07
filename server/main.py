@@ -41,13 +41,13 @@ def process(link: str, keyword: str):
                     {{
                         "summary": "summary"
                     }}
-                    where summary is a one sentence summary of the webpage that you are provided. 
-                    If you cannot open the page, just write "Cannot open page" in the Summary. 
+                    where summary is a VERY SHORT ONE SENTENCE SUMMARY of the opened page. 
+                    If you cannot open the page, raise an error.
                     Please provide information strictly on {keyword}, which is what the user requested.
                     """),  
             }
         ],
-        "max_tokens": 8192,
+        "max_tokens": 15000,
         "top_p": 1,
         "top_k": 40,
         "presence_penalty": 0,
@@ -60,11 +60,14 @@ def process(link: str, keyword: str):
     "Authorization": f"Bearer {FIREWORKS_API_KEY}"
     }
     driver.quit()
-
-    response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-    print(response.text)
-    response_data = json.loads(response.text)
-    return response_data["choices"][0]["message"]["content"]
+    try:
+        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        print(response.text)
+        response_data = json.loads(response.text)
+        output = eval(response_data["choices"][0]["message"]["content"])
+        return output["summary"]
+    except Exception: 
+        return None 
 
 #################################################################################################
 # GEMINI CHAT ###################################################################################
@@ -140,10 +143,9 @@ def send_message(_chat, message) -> tuple[list[dict], str]:
             elif line.startswith('- Citation:'):
                 citation = line.replace('- Citation:', '').strip()
 
-        print(f"URL::::{url}")
-
-        # furtherData = process(url, message)
-        # summary = furtherData["summary"]
+        summary = None
+        if url: 
+            summary = process(url, message)
         return {
             "title": title, 
             "authors": authors, 
@@ -151,7 +153,7 @@ def send_message(_chat, message) -> tuple[list[dict], str]:
             "date": date,
             "abstract": abstract,
             "citation": citation,
-            #"summary": summary
+            "summary": summary if summary else abstract[0:200]
         }
     
     sections = split_sections(new_text)

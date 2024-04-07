@@ -43,6 +43,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-grid-layout": "^1.4.4",
+    "react-parallax-tilt": "^1.7.220",
     "react-resizable": "^3.0.5",
     "react-resizable-panels": "^2.0.16",
     "remark": "^15.0.1",

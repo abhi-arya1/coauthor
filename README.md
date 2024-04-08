@@ -1,6 +1,6 @@
 # Coauthor 
 
-### 🏆 [SFHacks 2024 Best First-Time Hack](https://devpost.com/software/zotconnect-g6jhme)
+### 🏆 [SFHacks 2024 Best First-Time Hack](https://devpost.com/software/coauthor)
 
 ## Learn about Coauthor
 

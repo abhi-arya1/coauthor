@@ -7,6 +7,7 @@
 - [DevPost](https://devpost.com/software/coauthor)
 - [GitHub](https://github.com/abhi-arya1/coauthor)
 - [View Site](https://coauthor.vercel.app)
+  - Note that the chat boxes only run when `ngrok` is listening on a predefined constant URL, which isn't often due to resources
 
 ## Development Team 
 - [Abhigyan Arya](https://abhiarya.net)

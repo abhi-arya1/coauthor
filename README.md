@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Coauthor 
 
-## Getting Started
+### 🏆 [SFHacks 2024 Best First-Time Hack](https://devpost.com/software/zotconnect-g6jhme)
 
-First, run the development server:
+## Learn about Coauthor
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [DevPost](https://devpost.com/software/coauthor)
+- [GitHub](https://github.com/abhi-arya1/coauthor)
+- [View Site](https://coauthor.vercel.app)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development Team 
+- [Abhigyan Arya](https://abhiarya.net)
+- [Rishi Srihari](https://www.linkedin.com/in/hrishikesh-srihari-3525061a1/)
+- [Ivan Vuong](https://www.linkedin.com/in/ivan-vuong/)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Inspiration
+As we progress through our first year of college, we've realized how much time is spent browsing through questionable sources, hitting sketchy ".pdf" URLs, and usually resorting to reddit for a "credible" answer. There lacks a solution where both your information and notes are accessible and centralized. Moreover, it's known that the hardest part of research of the moving parts—with endless tabs, docs, and resources up, it quickly becomes a hassle. This is why we created Coauthor, a fully-deployed centralized site for all your research needs, incorporating collaborative notes, AI-powered web scraping for relevant sources, and more.
 
-## Learn More
+## What it does
+Coauthor is a web application that allows for collaborative work with others for research and academics. Users can access their Workspaces and create beautiful dashboards, talking to our multimodal input language model, which returns a variety of data on various webpages, based on chat inputs, as well as our database. As long as the work allows, users are encouraged to share their workspace with their collaborators, and use the features of the Multimodal AI (Summaries, Search, Citations, etc) to enhance their workflow.
 
-To learn more about Next.js, take a look at the following resources:
+## How we built it
+Coauthor operates with NextJS on the Vercel Platform for deployment, and is built with Typescript and TailwindCSS for the frontend and Python for the backend, with Python executing the Google Gemini, Fireworks AI, and Selenium for our data pipeline. In order to ensure security for our users' data, we used Clerk to authenticate users through every step of development, and we used it's integration with ConvexDB, a backend TypeScript platform to store user data, workspace data, and page metadata in a WebRTC-based API, tying data to unique workspace and user IDs, which are used for routing. Additionally, we built a custom query and mutation API within Convex to access and edit attributes of a user as they work.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Challenges we ran into
+- Compatibility with Selenium and AWS servers, where packages were unable to be ported over to a headless API.
+- Solved by port-forwarding a server through ngrok
+- Utilizing Fireworks.ai to help facilitate filtering web scraped information
+- Implementing a custom Google Gemini-based Model onto the web application while maintaining its prior training and proper outputs
+- Resizable and Dynamic CSS through Tailwind
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Accomplishments that we're proud of
+- Creating a polished and effective landing page.
+- Workspace/User Sharing, as well as WebRTC-based Workspaces, for collaborators to be on the same page, always
+- Bringing together Selenium and Fireworks.ai to web scrape and parse information with keywords, while training Gemini AI to generate different output formats for data analysis.
+- Meticulous Attention to detail within our site (e.g. resizable dashboard, light/dark mode, cursor-hover indicators, gradients, icons, etc)
 
-## Deploy on Vercel
+## What we learned
+- Keeping files clean and manageable where the team is able to collaboratively work on the project without merge conflicts
+- Teamwork and being supportive of each other is necessary no matter how hard the roadblocks and challenges may be.
+- Planning a better stack of technologies with many alternatives in case there are incompatibilities between them.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## What's next for Coauthor
+- Looking into a RAG model to better hold user queries
+- Making the web application much more customizable in regards to the layouts and giving the user's the ability to customize how they want it
+- Improving user experience on a vast range of platforms.
+- Actively keeping track of our AI Model to make sure that it is efficient and accurate

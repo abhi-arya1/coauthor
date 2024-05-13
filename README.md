@@ -47,3 +47,6 @@ Coauthor operates with NextJS on the Vercel Platform for deployment, and is buil
 - Making the web application much more customizable in regards to the layouts and giving the user's the ability to customize how they want it
 - Improving user experience on a vast range of platforms.
 - Actively keeping track of our AI Model to make sure that it is efficient and accurate
+
+## Reproduction 
+- While made with open source intentions, and the possibility for future contribution, Coauthor is currently *not* open source. Please read our Software [License](./LICENSE.md) before attempting to reproduce this project. 
